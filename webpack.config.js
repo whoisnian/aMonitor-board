@@ -1,30 +1,70 @@
-const path = require('path')
-const webpack = require('webpack')
+const { resolve } = require('path')
+const { HotModuleReplacementPlugin } = require('webpack')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const CopyPlugin = require('copy-webpack-plugin')
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+
+const isProduction = process.env.NODE_ENV === 'production'
+
+const getEntryPage = entryName => resolve(__dirname, 'src/pages/', entryName, 'index.js')
+const getEntryTemplate = entryName => resolve(__dirname, 'src/templates/', entryName, 'index.html')
+
+const entry = {
+  home: getEntryPage('home'),
+  auth: getEntryPage('auth')
+}
+
+const entryHtmlPlugins = Object.keys(entry).map(entryName =>
+  new HtmlWebpackPlugin({
+    filename: entryName === 'home' ? 'index.html' : entryName + '/index.html',
+    template: getEntryTemplate(entryName),
+    chunks: [entryName]
+  })
+)
 
 module.exports = {
-  entry: './src/index.js',
-  mode: 'development',
+  mode: isProduction ? 'production' : 'development',
+  entry: entry,
   module: {
     rules: [
       {
         test: /\.(js|jsx)$/,
-        exclude: /(node_modules|bower_components)/,
-        loader: 'babel-loader',
-        options: { presets: ['@babel/preset-env'] }
+        exclude: /node_modules/,
+        use: [
+          {
+            loader: 'babel-loader',
+            options: { presets: ['@babel/preset-env'] }
+          }
+        ]
       }
     ]
   },
   resolve: { extensions: ['*', '.js', '.jsx'] },
   output: {
-    path: path.resolve(__dirname, 'dist/'),
-    publicPath: '/dist/',
-    filename: 'bundle.js'
+    path: resolve(__dirname, 'dist/'),
+    publicPath: '/',
+    filename: isProduction ? 'webpack/[name]-[chunkhash].js' : 'webpack/[name].js'
   },
   devServer: {
-    contentBase: path.join(__dirname, 'public/'),
+    contentBase: resolve(__dirname, 'dist/'),
     port: 3000,
-    publicPath: 'http://localhost:3000/dist/',
+    publicPath: '/',
     hotOnly: true
   },
-  plugins: [new webpack.HotModuleReplacementPlugin()]
+  plugins: [
+    new CopyPlugin(['public']),
+    !isProduction && new HotModuleReplacementPlugin()
+  ].filter(Boolean).concat(entryHtmlPlugins),
+  optimization: isProduction ? {
+    minimize: true,
+    minimizer: [
+      new UglifyJsPlugin({
+        test: /\.js$/,
+        cache: true,
+        parallel: true,
+        sourceMap: false,
+        uglifyOptions: { warnings: false, output: { comments: false } }
+      })
+    ]
+  } : {}
 }
