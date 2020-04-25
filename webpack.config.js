@@ -2,7 +2,7 @@ const { resolve } = require('path')
 const { HotModuleReplacementPlugin } = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CopyPlugin = require('copy-webpack-plugin')
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const TerserPlugin = require('terser-webpack-plugin')
 
 const isProduction = process.env.NODE_ENV === 'production'
 
@@ -53,12 +53,12 @@ module.exports = {
   optimization: isProduction ? {
     minimize: true,
     minimizer: [
-      new UglifyJsPlugin({
+      new TerserPlugin({
         test: /\.js$/,
         cache: true,
         parallel: true,
         sourceMap: false,
-        uglifyOptions: { warnings: false, output: { comments: false } }
+        terserOptions: { warnings: false, output: { comments: false } }
       })
     ],
     splitChunks: {
