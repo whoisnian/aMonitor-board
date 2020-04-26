@@ -28,7 +28,14 @@ export default function AuthBox () {
 
   const handleChangeTab = (event, newValue) => {
     setTabIndex(newValue)
-    window.location.hash = (newValue === 1 ? '#signUp' : '#signIn')
+    window.history.replaceState(null, null, newValue === 1 ? '#signUp' : '#signIn')
+
+    // 像下面这样直接修改 location.hash 会在 window.history 中增加新的 state，影响浏览器前进后退切换页面的体验，因此换用 history.replaceState()
+    // window.location.hash = (newValue === 1 ? '#signUp' : '#signIn')
+  }
+
+  window.onpopstate = () => {
+    setTabIndex(window.location.hash === '#signUp' ? 1 : 0)
   }
 
   return (
