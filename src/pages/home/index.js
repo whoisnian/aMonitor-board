@@ -94,7 +94,7 @@ function Detail () {
   return (
     <Container maxWidth='sm' className={classes.container}>
       <Box className={classes.box}>
-        <img width='192px' height='192px' src='/logo.svg' />
+        <img width='192px' height='192px' src='/img/aMonitor-logo.svg' />
         <Typography variant='h2'>
           aMonitor
         </Typography>
