@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { makeStyles } from '@material-ui/core/styles'
-import { Container, Box } from '@material-ui/core'
+import { CssBaseline, Container, Box } from '@material-ui/core'
 import AuthBox from '../../components/authbox'
 
 const useStyles = makeStyles((theme) => ({
@@ -31,6 +31,7 @@ function App () {
 
 ReactDOM.render(
   <React.StrictMode>
+    <CssBaseline />
     <App />
   </React.StrictMode>,
   document.getElementById('root')
