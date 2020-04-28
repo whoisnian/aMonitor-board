@@ -29,10 +29,16 @@ function App () {
   )
 }
 
+const divElement = document.createElement('div')
+
 ReactDOM.render(
   <React.StrictMode>
     <CssBaseline />
     <App />
   </React.StrictMode>,
-  document.getElementById('root')
+  divElement
 )
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.body.appendChild(divElement)
+})

@@ -118,11 +118,17 @@ function Detail () {
   )
 }
 
+const divElement = document.createElement('div')
+
 ReactDOM.render(
   <React.StrictMode>
     <CssBaseline />
     <TitleBar />
     <Detail />
   </React.StrictMode>,
-  document.getElementById('root')
+  divElement
 )
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.body.appendChild(divElement)
+})

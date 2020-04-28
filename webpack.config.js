@@ -16,6 +16,7 @@ const entry = {
 
 const entryHtmlPlugins = Object.keys(entry).map(entryName =>
   new HtmlWebpackPlugin({
+    inject: 'head',
     filename: entryName === 'home' ? 'index.html' : entryName + '/index.html',
     template: getEntryTemplate(entryName),
     chunks: [entryName]
