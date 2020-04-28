@@ -11,7 +11,8 @@ const getEntryTemplate = entryName => resolve(__dirname, 'src/templates/', entry
 
 const entry = {
   home: getEntryPage('home'),
-  auth: getEntryPage('auth')
+  auth: getEntryPage('auth'),
+  overview: getEntryPage('overview')
 }
 
 const entryHtmlPlugins = Object.keys(entry).map(entryName =>
