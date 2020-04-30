@@ -25,6 +25,16 @@ const useStyles = makeStyles((theme) => ({
 export default function AuthBox () {
   const classes = useStyles()
   const [tabIndex, setTabIndex] = React.useState(window.location.hash === '#signUp' ? 1 : 0)
+  const [signInStatus, setSignInStatus] = React.useState()
+  const [signInMessage, setSignInMessage] = React.useState()
+  const [signUpStatus, setSignUpStatus] = React.useState()
+  const [signUpMessage, setSignUpMessage] = React.useState()
+
+  const signInEmailRef = React.useRef()
+  const signInPasswordRef = React.useRef()
+  const signUpUsernameRef = React.useRef()
+  const signUpEmailRef = React.useRef()
+  const signUpPasswordRef = React.useRef()
 
   const handleChangeTab = (event, newValue) => {
     setTabIndex(newValue)
@@ -38,6 +48,58 @@ export default function AuthBox () {
     setTabIndex(window.location.hash === '#signUp' ? 1 : 0)
   }
 
+  // https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
+  const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+
+  const handleSignIn = (event) => {
+    setSignInStatus('loading')
+
+    const email = signInEmailRef.current.value
+    const password = signInPasswordRef.current.value
+
+    if (!emailRegex.test(email)) {
+      setSignInMessage('邮箱地址不合法')
+      setSignInStatus('error')
+      return
+    }
+
+    if (password.length < 6) {
+      setSignInMessage('密码至少六位')
+      setSignInStatus('error')
+      return
+    }
+
+    setTimeout(() => setSignInStatus('success'), 1000)
+  }
+
+  const handleSignUp = (event) => {
+    setSignUpStatus('loading')
+
+    const username = signUpUsernameRef.current.value
+    const email = signUpEmailRef.current.value
+    const password = signInPasswordRef.current.value
+
+    if (username.length < 1) {
+      setSignUpMessage('用户名不能为空')
+      setSignUpStatus('error')
+      return
+    }
+
+    if (!emailRegex.test(email)) {
+      setSignUpMessage('邮箱地址不合法')
+      setSignUpStatus('error')
+      return
+    }
+
+    if (password.length < 6) {
+      setSignUpMessage('密码至少六位')
+      setSignUpStatus('error')
+      return
+    }
+
+    setTimeout(() => setSignUpStatus('success'), 1000)
+  }
+
   return (
     <Box className={classes.box}>
       <Tabs value={tabIndex} onChange={handleChangeTab} centered>
@@ -46,21 +108,17 @@ export default function AuthBox () {
       </Tabs>
       <Box hidden={tabIndex !== 0} id='signInPanel'>
         <form autoComplete='on'>
-          <EmailInput /><br />
-          <PasswordInput />
-          <Box textAlign='right' marginTop={1}>
-            <SubmitButton>登 录</SubmitButton>
-          </Box>
+          <EmailInput ref={signInEmailRef} /><br />
+          <PasswordInput ref={signInPasswordRef} />
+          <SubmitButton msg={signInMessage} status={signInStatus} onClick={handleSignIn}>登 录</SubmitButton>
         </form>
       </Box>
       <Box hidden={tabIndex !== 1} id='signUpPanel'>
         <form autoComplete='on'>
-          <UsernameInput /><br />
-          <EmailInput /><br />
-          <PasswordInput />
-          <Box textAlign='right' marginTop={1}>
-            <SubmitButton>注 册</SubmitButton>
-          </Box>
+          <UsernameInput ref={signUpUsernameRef} /><br />
+          <EmailInput ref={signUpEmailRef} /><br />
+          <PasswordInput ref={signUpPasswordRef} />
+          <SubmitButton msg={signUpMessage} status={signUpStatus} onClick={handleSignUp}>注 册</SubmitButton>
         </form>
       </Box>
     </Box>

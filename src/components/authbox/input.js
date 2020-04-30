@@ -1,23 +1,30 @@
 import React from 'react'
+import { makeStyles } from '@material-ui/core/styles'
 import {
+  Box,
   FormControl,
   InputAdornment,
   Input,
   IconButton,
-  Button
+  Button,
+  CircularProgress,
+  Typography
 } from '@material-ui/core'
 import {
   AccountCircle,
   Email,
   Lock,
   Visibility,
-  VisibilityOff
+  VisibilityOff,
+  Error,
+  CheckCircle
 } from '@material-ui/icons'
 
-const UsernameInput = function () {
+const UsernameInput = React.forwardRef((props, ref) => {
   return (
     <FormControl fullWidth variant='outlined' margin='normal'>
       <Input
+        inputRef={ref}
         name='username'
         placeholder='用户名'
         startAdornment={
@@ -28,12 +35,13 @@ const UsernameInput = function () {
       />
     </FormControl>
   )
-}
+})
 
-const EmailInput = function () {
+const EmailInput = React.forwardRef((props, ref) => {
   return (
     <FormControl fullWidth variant='outlined' margin='normal'>
       <Input
+        inputRef={ref}
         name='email'
         placeholder='邮箱'
         startAdornment={
@@ -44,14 +52,15 @@ const EmailInput = function () {
       />
     </FormControl>
   )
-}
+})
 
-const PasswordInput = function () {
+const PasswordInput = React.forwardRef((props, ref) => {
   const [showPassword, setShowPassword] = React.useState(false)
 
   return (
     <FormControl fullWidth variant='outlined' margin='normal'>
       <Input
+        inputRef={ref}
         name='password'
         placeholder='密码'
         type={showPassword ? 'text' : 'password'}
@@ -70,17 +79,50 @@ const PasswordInput = function () {
       />
     </FormControl>
   )
-}
+})
+
+const useStyles = makeStyles((theme) => ({
+  box: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    marginTop: theme.spacing(1)
+  },
+  msg: {
+    color: theme.palette.error.main,
+    marginRight: theme.spacing(1)
+  },
+  errorIcon: {
+    color: theme.palette.error.main,
+    marginRight: theme.spacing(1)
+  },
+  successIcon: {
+    color: theme.palette.success.main,
+    marginRight: theme.spacing(1)
+  },
+  progress: {
+    marginRight: theme.spacing(1)
+  }
+}))
 
 const SubmitButton = function (props) {
+  const classes = useStyles()
+
   return (
-    <Button
-      variant='contained'
-      color='primary'
-      type='submit'
-    >
-      {props.children}
-    </Button>
+    <Box className={classes.box}>
+      {props.status === 'error' && <Typography className={classes.msg}>{props.msg}</Typography>}
+      {props.status === 'error' && <Error className={classes.errorIcon} />}
+      {props.status === 'success' && <CheckCircle className={classes.successIcon} />}
+      {props.status === 'loading' && <CircularProgress size={24} className={classes.progress} />}
+      <Button
+        variant='contained'
+        color='primary'
+        disabled={props.status === 'loading'}
+        onClick={props.onClick}
+      >
+        {props.children}
+      </Button>
+    </Box>
   )
 }
 
