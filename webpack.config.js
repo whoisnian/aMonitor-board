@@ -43,9 +43,12 @@ module.exports = {
   },
   devServer: {
     contentBase: resolve(__dirname, 'dist/'),
-    port: 3000,
+    port: 8000,
     publicPath: '/',
-    hotOnly: true
+    hotOnly: true,
+    proxy: {
+      '/api': 'http://127.0.0.1:3000'
+    }
   },
   plugins: [
     new CopyPlugin(['public']),
