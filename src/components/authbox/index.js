@@ -11,6 +11,11 @@ import {
   PasswordInput,
   SubmitButton
 } from './input'
+import {
+  requestSignIn,
+  requestSignUp,
+  requestSelfInfo
+} from '../../api'
 
 const useStyles = makeStyles((theme) => ({
   box: {
@@ -36,6 +41,14 @@ export default function AuthBox () {
   const signUpEmailRef = React.useRef()
   const signUpPasswordRef = React.useRef()
 
+  React.useEffect(() => {
+    // 检查是否已经登录
+    (async () => {
+      const content = await requestSelfInfo()
+      if (content) { window.location.href = '/' }
+    })()
+  }, [])
+
   const handleChangeTab = (event, newValue) => {
     setTabIndex(newValue)
     window.history.replaceState(null, null, newValue === 1 ? '#signUp' : '#signIn')
@@ -51,7 +64,7 @@ export default function AuthBox () {
   // https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
   const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
-  const handleSignIn = (event) => {
+  const handleSignIn = async () => {
     setSignInStatus('loading')
 
     const email = signInEmailRef.current.value
@@ -63,21 +76,29 @@ export default function AuthBox () {
       return
     }
 
-    if (password.length < 6) {
-      setSignInMessage('密码至少六位')
+    if (password.length < 1) {
+      setSignInMessage('密码不能为空')
       setSignInStatus('error')
       return
     }
 
-    setTimeout(() => setSignInStatus('success'), 1000)
+    const { ok, msg } = await requestSignIn(email, password)
+    if (!ok) {
+      setSignInMessage(msg)
+      setSignInStatus('error')
+      return
+    }
+
+    setSignInStatus('success')
+    window.location.href = '/'
   }
 
-  const handleSignUp = (event) => {
+  const handleSignUp = async () => {
     setSignUpStatus('loading')
 
     const username = signUpUsernameRef.current.value
     const email = signUpEmailRef.current.value
-    const password = signInPasswordRef.current.value
+    const password = signUpPasswordRef.current.value
 
     if (username.length < 1) {
       setSignUpMessage('用户名不能为空')
@@ -97,7 +118,15 @@ export default function AuthBox () {
       return
     }
 
-    setTimeout(() => setSignUpStatus('success'), 1000)
+    const { ok, msg } = await requestSignUp(username, email, password)
+    if (!ok) {
+      setSignUpMessage(msg)
+      setSignUpStatus('error')
+      return
+    }
+
+    setSignUpStatus('success')
+    window.location.href = '/'
   }
 
   return (
