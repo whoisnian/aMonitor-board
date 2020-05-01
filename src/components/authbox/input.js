@@ -117,6 +117,7 @@ const SubmitButton = function (props) {
       <Button
         variant='contained'
         color='primary'
+        type='submit'
         disabled={props.status === 'loading'}
         onClick={props.onClick}
       >

@@ -64,7 +64,8 @@ export default function AuthBox () {
   // https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
   const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
-  const handleSignIn = async () => {
+  const handleSignIn = async (event) => {
+    event.preventDefault()
     setSignInStatus('loading')
 
     const email = signInEmailRef.current.value
@@ -93,7 +94,8 @@ export default function AuthBox () {
     window.location.href = '/'
   }
 
-  const handleSignUp = async () => {
+  const handleSignUp = async (event) => {
+    event.preventDefault()
     setSignUpStatus('loading')
 
     const username = signUpUsernameRef.current.value
