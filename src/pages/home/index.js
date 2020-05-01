@@ -11,6 +11,7 @@ import {
   Box
 } from '@material-ui/core'
 import { GitHub } from '@material-ui/icons'
+import { requestLogout, requestSelfInfo } from '../../api'
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -44,7 +45,20 @@ const useStyles = makeStyles((theme) => ({
 
 function TitleBar () {
   const classes = useStyles()
-  const auth = true
+  const [auth, setAuth] = React.useState(false)
+
+  React.useEffect(() => {
+    // 检查是否已经登录
+    (async () => {
+      const content = await requestSelfInfo()
+      if (content) { setAuth(true) }
+    })()
+  }, [])
+
+  const handleLogout = async () => {
+    await requestLogout()
+    setAuth(false)
+  }
 
   return (
     <AppBar position='static'>
@@ -56,6 +70,9 @@ function TitleBar () {
           <div>
             <Button variant='outlined' color='inherit' className={classes.toolbarButton} href='overview'>
               控制台
+            </Button>
+            <Button variant='outlined' color='inherit' className={classes.toolbarButton} onClick={handleLogout}>
+              注 销
             </Button>
           </div>
         ) : (
