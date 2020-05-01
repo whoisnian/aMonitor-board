@@ -5,6 +5,9 @@ module.exports = {
   ],
   plugins: [
     [
+      '@babel/plugin-transform-runtime'
+    ],
+    [
       'babel-plugin-import',
       {
         libraryName: '@material-ui/core',
