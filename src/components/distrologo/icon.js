@@ -1,22 +1,22 @@
 import React from 'react'
 
-const Svgalpine = () => <img src='/img/alpine.svg' />
-const Svgarchlinux = () => <img src='/img/archlinux.svg' />
-const Svgcentos = () => <img src='/img/centos.svg' />
-const Svgdebian = () => <img src='/img/debian.svg' />
-const Svgdeepin = () => <img src='/img/deepin.svg' />
-const Svgfedora = () => <img src='/img/fedora.svg' />
-const Svgfreebsd = () => <img src='/img/freebsd.svg' />
-const Svggentoo = () => <img src='/img/gentoo.svg' />
-const Svgkali = () => <img src='/img/kali.svg' />
-const Svgmanjaro = () => <img src='/img/manjaro.svg' />
-const Svgmint = () => <img src='/img/mint.svg' />
-const Svgopensuse = () => <img src='/img/opensuse.svg' />
-const Svgpuppy = () => <img src='/img/puppy.svg' />
-const Svgraspbian = () => <img src='/img/raspbian.svg' />
-const Svgrhel = () => <img src='/img/rhel.svg' />
-const Svgtux = () => <img src='/img/tux.svg' />
-const Svgubuntu = () => <img src='/img/ubuntu.svg' />
+const Svgalpine = (props) => <img {...props} src='/img/alpine.svg' />
+const Svgarchlinux = (props) => <img {...props} src='/img/archlinux.svg' />
+const Svgcentos = (props) => <img {...props} src='/img/centos.svg' />
+const Svgdebian = (props) => <img {...props} src='/img/debian.svg' />
+const Svgdeepin = (props) => <img {...props} src='/img/deepin.svg' />
+const Svgfedora = (props) => <img {...props} src='/img/fedora.svg' />
+const Svgfreebsd = (props) => <img {...props} src='/img/freebsd.svg' />
+const Svggentoo = (props) => <img {...props} src='/img/gentoo.svg' />
+const Svgkali = (props) => <img {...props} src='/img/kali.svg' />
+const Svgmanjaro = (props) => <img {...props} src='/img/manjaro.svg' />
+const Svgmint = (props) => <img {...props} src='/img/mint.svg' />
+const Svgopensuse = (props) => <img {...props} src='/img/opensuse.svg' />
+const Svgpuppy = (props) => <img {...props} src='/img/puppy.svg' />
+const Svgraspbian = (props) => <img {...props} src='/img/raspbian.svg' />
+const Svgrhel = (props) => <img {...props} src='/img/rhel.svg' />
+const Svgtux = (props) => <img {...props} src='/img/tux.svg' />
+const Svgubuntu = (props) => <img {...props} src='/img/ubuntu.svg' />
 
 export {
   Svgalpine,
