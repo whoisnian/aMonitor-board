@@ -74,6 +74,9 @@ export default function Navigation (props) {
           <ListItem button component='a' href='/overview'>
             <ListItemText primary='概览' />
           </ListItem>
+          <ListItem button component='a' href='/agents'>
+            <ListItemText primary='主机列表' />
+          </ListItem>
         </List>
         <Divider />
       </Drawer>
