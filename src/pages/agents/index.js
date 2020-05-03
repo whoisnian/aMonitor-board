@@ -6,6 +6,11 @@ import {
   Paper,
   Tooltip,
   IconButton,
+  Popper,
+  Grow,
+  MenuList,
+  MenuItem,
+  ClickAwayListener,
   TableContainer,
   Table,
   TableHead,
@@ -15,7 +20,7 @@ import {
   TableCell,
   TablePagination
 } from '@material-ui/core'
-import { Search } from '@material-ui/icons'
+import { MoreHoriz } from '@material-ui/icons'
 import Navigation from '../../components/navigation'
 import DistroLogo from '../../components/distrologo'
 import StatusIcon from '../../components/statusicon'
@@ -31,6 +36,10 @@ const useStyles = makeStyles((theme) => ({
   },
   colHostname: {
     textAlign: 'left'
+  },
+  colIP: {
+    width: '128px',
+    textAlign: 'center'
   },
   colStatus: {
     width: '64px',
@@ -76,6 +85,7 @@ function App () {
   const [agentList, setAgentList] = React.useState([])
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(10)
+  const [anchorEl, setAnchorEl] = React.useState(null)
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
@@ -84,6 +94,14 @@ function App () {
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10))
     setPage(0)
+  }
+
+  const handleMenuClick = (event) => {
+    setAnchorEl(anchorEl ? null : event.currentTarget)
+  }
+
+  const handleMenuClose = (event) => {
+    setAnchorEl(null)
   }
 
   React.useEffect(() => {
@@ -99,6 +117,7 @@ function App () {
               <TableCell className={classes.colID}>编号</TableCell>
               <TableCell className={classes.colDistro}>发行版</TableCell>
               <TableCell className={classes.colHostname}>主机名</TableCell>
+              <TableCell className={classes.colIP}>IP地址</TableCell>
               <TableCell className={classes.colStatus}>状态</TableCell>
               <TableCell className={classes.colAction}>操作</TableCell>
             </TableRow>
@@ -108,9 +127,8 @@ function App () {
               ? agentList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               : agentList
             ).map((agent) => (
-              <TableRow key={agent.id}>
+              <TableRow hover key={agent.id}>
                 <TableCell className={classes.colID}>{agent.id}</TableCell>
-
                 <TableCell className={classes.colDistro}>
                   <Tooltip title={agent.distro} placement='top' arrow>
                     <span>
@@ -121,14 +139,29 @@ function App () {
                   </Tooltip>
                 </TableCell>
                 <TableCell className={classes.colHostname}>{agent.hostname}</TableCell>
+                <TableCell className={classes.colIP}>192.168.0.100</TableCell>
                 <TableCell className={classes.colStatus}><StatusIcon status={agent.status} /></TableCell>
                 <TableCell className={classes.colAction}>
-                  <IconButton size='small' disableRipple disableFocusRipple>
-                    <Search />
+                  <IconButton id={agent.id} size='small' disableRipple disableFocusRipple onClick={handleMenuClick}>
+                    <MoreHoriz />
                   </IconButton>
                 </TableCell>
               </TableRow>
             ))}
+            <Popper open={Boolean(anchorEl)} anchorEl={anchorEl} transition disablePortal>
+              {({ TransitionProps, placement }) => (
+                <Grow {...TransitionProps} style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}>
+                  <Paper>
+                    <ClickAwayListener onClickAway={handleMenuClose}>
+                      <MenuList autoFocusItem={Boolean(anchorEl)} onKeyDown={handleMenuClose}>
+                        <MenuItem onClick={handleMenuClose}>查看详情</MenuItem>
+                        <MenuItem onClick={handleMenuClose}>立即删除</MenuItem>
+                      </MenuList>
+                    </ClickAwayListener>
+                  </Paper>
+                </Grow>
+              )}
+            </Popper>
           </TableBody>
           <TableFooter>
             <TableRow>
