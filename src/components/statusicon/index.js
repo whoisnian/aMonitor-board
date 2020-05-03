@@ -1,9 +1,6 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import {
-  Tooltip,
-  IconButton
-} from '@material-ui/core'
+import { IconButton } from '@material-ui/core'
 import { CheckCircle, Error, Info } from '@material-ui/icons'
 
 const useStyles = makeStyles((theme) => ({
@@ -25,13 +22,9 @@ const okIcon = () => {
   const classes = useStyles()
 
   return (
-    <Tooltip title='正常' placement='top' arrow>
-      <span>
-        <IconButton className={classes.logoButton} disabled>
-          <CheckCircle className={classes.okIcon} />
-        </IconButton>
-      </span>
-    </Tooltip>
+    <IconButton className={classes.logoButton} disabled>
+      <CheckCircle className={classes.okIcon} />
+    </IconButton>
   )
 }
 
@@ -39,13 +32,9 @@ const errorIcon = () => {
   const classes = useStyles()
 
   return (
-    <Tooltip title='报警' placement='top' arrow>
-      <span>
-        <IconButton className={classes.logoButton} disabled>
-          <Error className={classes.errorIcon} />
-        </IconButton>
-      </span>
-    </Tooltip>
+    <IconButton className={classes.logoButton} disabled>
+      <Error className={classes.errorIcon} />
+    </IconButton>
   )
 }
 
@@ -53,13 +42,9 @@ const offIcon = () => {
   const classes = useStyles()
 
   return (
-    <Tooltip title='关机' placement='top' arrow>
-      <span>
-        <IconButton className={classes.logoButton} disabled>
-          <Info className={classes.offIcon} />
-        </IconButton>
-      </span>
-    </Tooltip>
+    <IconButton className={classes.logoButton} disabled>
+      <Info className={classes.offIcon} />
+    </IconButton>
   )
 }
 
