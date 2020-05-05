@@ -1,5 +1,8 @@
 import {
   fetchPostHead,
+  fetchDeleteHead,
+  fetchPutHead,
+  fetchGetJSON,
   fetchGetJSONWithStatus,
   fetchPostJSONWithStatus
 } from '../utils/request'
@@ -33,9 +36,37 @@ const requestSelfInfo = async () => {
   return ok ? content : null
 }
 
+const requestAllAgents = async () => {
+  const content = await fetchGetJSON('/api/agents')
+  return content
+}
+
+const requestDeletedAgents = async () => {
+  const content = await fetchGetJSON('/api/agents?deleted=true')
+  return content
+}
+
+const requestDeleteAgent = async (id) => {
+  await fetchDeleteHead('/api/agent/' + id)
+}
+
+const requestRecoverAgent = async (id) => {
+  await fetchPutHead('/api/agent/' + id)
+}
+
+const requestAgentInfo = async (id) => {
+  const content = await fetchGetJSON('/api/agent/' + id)
+  return content
+}
+
 export {
   requestSignIn,
   requestSignUp,
   requestLogout,
-  requestSelfInfo
+  requestSelfInfo,
+  requestAllAgents,
+  requestDeletedAgents,
+  requestDeleteAgent,
+  requestRecoverAgent,
+  requestAgentInfo
 }
