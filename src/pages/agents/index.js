@@ -11,6 +11,8 @@ import {
   MenuList,
   MenuItem,
   ClickAwayListener,
+  FormControlLabel,
+  Switch,
   TableContainer,
   Table,
   TableHead,
@@ -24,6 +26,12 @@ import { MoreHoriz } from '@material-ui/icons'
 import Navigation from '../../components/navigation'
 import DistroLogo from '../../components/distrologo'
 import StatusIcon from '../../components/statusicon'
+import {
+  requestAllAgents,
+  requestDeletedAgents,
+  requestDeleteAgent,
+  requestRecoverAgent
+} from '../../api'
 
 const useStyles = makeStyles((theme) => ({
   colID: {
@@ -39,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
   },
   colIP: {
     width: '128px',
-    textAlign: 'center'
+    textAlign: 'left'
   },
   colStatus: {
     width: '64px',
@@ -49,6 +57,11 @@ const useStyles = makeStyles((theme) => ({
     width: '64px',
     textAlign: 'center'
   },
+  cellSwitch: {
+    paddingTop: 0,
+    paddingBottom: 0,
+    color: theme.palette.text.primary
+  },
   logoButton: {
     padding: 0
   },
@@ -57,31 +70,10 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-function createData (id, hostname, distro, status) {
-  return { id, hostname, distro, status }
-}
-
-const rows = [
-  createData(1, 'host001', 'Alpine Linux v3.4', 'ok'),
-  createData(2, 'host002', 'Arch Linux', 'ok'),
-  createData(3, 'host003', 'CentOS Linux 8 (Core)', 'off'),
-  createData(4, 'host004', 'Debian GNU/Linux 9 (stretch)', 'error'),
-  createData(5, 'host005', 'Deepin 15.11', 'ok'),
-  createData(6, 'host006', 'Fedora 30 (Workstation Edition)', 'error'),
-  createData(7, 'host007 with long name', 'FreeBSD 13.0-CURRENT', 'ok'),
-  createData(8, 'host008 with long name', 'Gentoo/Linux', 'ok'),
-  createData(9, 'host009', 'Manjaro Linux', 'error'),
-  createData(10, 'host010 long', 'openSUSE Leap 42.1 (x86_64)', 'off'),
-  createData(11, 'host011 long', 'bionicpup64 8.0', 'ok'),
-  createData(12, 'host012', 'Raspbian GNU/Linux', 'ok'),
-  createData(13, 'host013', 'Red Hat Enterprise Linux Server 7.5 (Maipo)', 'error'),
-  createData(14, 'host014', 'Ubuntu 18.04.4 LTS', 'error'),
-  createData(15, 'host015', 'Other Linux (64 bit)', 'ok')
-]
-
 function App () {
   const classes = useStyles()
 
+  const [deleted, setDeleted] = React.useState(false)
   const [agentList, setAgentList] = React.useState([])
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(10)
@@ -100,16 +92,53 @@ function App () {
     setAnchorEl(anchorEl ? null : event.currentTarget)
   }
 
-  const handleMenuClose = (event) => {
+  const handleMenuClose = () => {
+    setAnchorEl(null)
+  }
+
+  const handleDetailsClick = () => {
+    window.location.href = '/agent?id=' + anchorEl.id
+    setAnchorEl(null)
+  }
+
+  const handleChange = async () => {
+    setDeleted(!deleted)
+
+    const content = await (deleted ? requestAllAgents() : requestDeletedAgents())
+    setAgentList(content)
+  }
+
+  const handleDeleteClick = () => {
+    requestDeleteAgent(anchorEl.id) // async
+
+    const id = parseInt(anchorEl.id)
+    const pos = agentList.findIndex((v) => v.id === id)
+    agentList.splice(pos, 1)
+
+    setAgentList(agentList)
+    setAnchorEl(null)
+  }
+
+  const handleRecoverClick = () => {
+    requestRecoverAgent(anchorEl.id) // async
+
+    const id = parseInt(anchorEl.id)
+    const pos = agentList.findIndex((v) => v.id === id)
+    agentList.splice(pos, 1)
+
+    setAgentList(agentList)
     setAnchorEl(null)
   }
 
   React.useEffect(() => {
-    setAgentList(rows)
+    (async () => {
+      const content = await requestAllAgents()
+      setAgentList(content)
+    })()
   }, [])
 
   return (
-    <Navigation title='主机列表'>
+    <Navigation title={deleted ? '主机列表（回收站）' : '主机列表'}>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -139,7 +168,7 @@ function App () {
                   </Tooltip>
                 </TableCell>
                 <TableCell className={classes.colHostname}>{agent.hostname}</TableCell>
-                <TableCell className={classes.colIP}>192.168.0.100</TableCell>
+                <TableCell className={classes.colIP}>{agent.ip}</TableCell>
                 <TableCell className={classes.colStatus}><StatusIcon status={agent.status} /></TableCell>
                 <TableCell className={classes.colAction}>
                   <IconButton id={agent.id} size='small' disableRipple disableFocusRipple onClick={handleMenuClick}>
@@ -154,8 +183,10 @@ function App () {
                   <Paper>
                     <ClickAwayListener onClickAway={handleMenuClose}>
                       <MenuList autoFocusItem={Boolean(anchorEl)} onKeyDown={handleMenuClose}>
-                        <MenuItem onClick={handleMenuClose}>查看详情</MenuItem>
-                        <MenuItem onClick={handleMenuClose}>立即删除</MenuItem>
+                        <MenuItem onClick={handleDetailsClick}>查看详情</MenuItem>
+                        {deleted
+                          ? <MenuItem onClick={handleRecoverClick}>立即恢复</MenuItem>
+                          : <MenuItem onClick={handleDeleteClick}>立即删除</MenuItem>}
                       </MenuList>
                     </ClickAwayListener>
                   </Paper>
@@ -165,9 +196,15 @@ function App () {
           </TableBody>
           <TableFooter>
             <TableRow>
+              <TableCell colSpan={2} className={classes.cellSwitch}>
+                <FormControlLabel
+                  control={<Switch checked={deleted} onChange={handleChange} color='primary' name='deleted' />}
+                  label='回收站'
+                />
+              </TableCell>
               <TablePagination
                 rowsPerPageOptions={[10, 25, 50, { label: 'All', value: -1 }]}
-                colSpan={5}
+                colSpan={4}
                 count={agentList.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
