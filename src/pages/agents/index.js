@@ -169,7 +169,7 @@ function App () {
                 </TableCell>
                 <TableCell className={classes.colHostname}>{agent.hostname}</TableCell>
                 <TableCell className={classes.colIP}>{agent.ip}</TableCell>
-                <TableCell className={classes.colStatus}><StatusIcon status={agent.status} /></TableCell>
+                <TableCell className={classes.colStatus}><StatusIcon status={agent.status || 'unknown'} /></TableCell>
                 <TableCell className={classes.colAction}>
                   <IconButton id={agent.id} size='small' disableRipple disableFocusRipple onClick={handleMenuClick}>
                     <MoreHoriz />
