@@ -13,7 +13,8 @@ const entry = {
   home: getEntryPage('home'),
   auth: getEntryPage('auth'),
   overview: getEntryPage('overview'),
-  agents: getEntryPage('agents')
+  agents: getEntryPage('agents'),
+  agent: getEntryPage('agent')
 }
 
 const entryHtmlPlugins = Object.keys(entry).map(entryName =>
