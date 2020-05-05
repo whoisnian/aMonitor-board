@@ -66,7 +66,10 @@ const useStyles = makeStyles((theme) => ({
     padding: 0
   },
   distroLogo: {
-    verticalAlign: 'middle'
+    verticalAlign: 'middle',
+    display: 'inline-block',
+    width: 24,
+    height: 24
   }
 }))
 
