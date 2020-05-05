@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 import { makeStyles } from '@material-ui/core/styles'
 import { CssBaseline, Container, Box } from '@material-ui/core'
 import AuthBox from '../../components/authbox'
+import { requestSelfInfo } from '../../api'
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -22,6 +23,14 @@ const useStyles = makeStyles((theme) => ({
 
 function App () {
   const classes = useStyles()
+
+  React.useEffect(() => {
+    // 检查是否已经登录
+    (async () => {
+      const content = await requestSelfInfo()
+      if (content) { window.location.href = '/123' }
+    })()
+  }, [])
 
   return (
     <Container maxWidth='sm' className={classes.container}>

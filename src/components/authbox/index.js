@@ -13,8 +13,7 @@ import {
 } from './input'
 import {
   requestSignIn,
-  requestSignUp,
-  requestSelfInfo
+  requestSignUp
 } from '../../api'
 
 const useStyles = makeStyles((theme) => ({
@@ -40,14 +39,6 @@ export default function AuthBox () {
   const signUpUsernameRef = React.useRef()
   const signUpEmailRef = React.useRef()
   const signUpPasswordRef = React.useRef()
-
-  React.useEffect(() => {
-    // 检查是否已经登录
-    (async () => {
-      const content = await requestSelfInfo()
-      if (content) { window.location.href = '/' }
-    })()
-  }, [])
 
   const handleChangeTab = (event, newValue) => {
     setTabIndex(newValue)
