@@ -47,15 +47,55 @@ const requestDeletedAgents = async () => {
 }
 
 const requestDeleteAgent = async (id) => {
-  await fetchDeleteHead('/api/agent/' + id)
+  await fetchDeleteHead(`/api/agent/${id}`)
 }
 
 const requestRecoverAgent = async (id) => {
-  await fetchPutHead('/api/agent/' + id)
+  await fetchPutHead(`/api/agent/${id}`)
 }
 
 const requestAgentInfo = async (id) => {
-  const content = await fetchGetJSON('/api/agent/' + id)
+  const content = await fetchGetJSON(`/api/agent/${id}`)
+  return content
+}
+
+const requestCpuInfo = async (id, from, to) => {
+  const content = await fetchGetJSON(`/api/data/${id}/cpuinfo?from=${from}&to=${to}`)
+  return content
+}
+
+const requestMemInfo = async (id, from, to) => {
+  const content = await fetchGetJSON(`/api/data/${id}/meminfo?from=${from}&to=${to}`)
+  return content
+}
+
+const requestLoadInfo = async (id, from, to) => {
+  const content = await fetchGetJSON(`/api/data/${id}/loadinfo?from=${from}&to=${to}`)
+  return content
+}
+
+const requestNetInfo = async (id, from, to) => {
+  const content = await fetchGetJSON(`/api/data/${id}/netinfo?from=${from}&to=${to}`)
+  return content
+}
+
+const requestDiskInfo = async (id, from, to) => {
+  const content = await fetchGetJSON(`/api/data/${id}/diskinfo?from=${from}&to=${to}`)
+  return content
+}
+
+const requestMountsInfo = async (id, from, to) => {
+  const content = await fetchGetJSON(`/api/data/${id}/mountsinfo?from=${from}&to=${to}`)
+  return content
+}
+
+const requestSshdInfo = async (id, from, to) => {
+  const content = await fetchGetJSON(`/api/data/${id}/sshdinfo?from=${from}&to=${to}`)
+  return content
+}
+
+const requestFileMDInfo = async (id, from, to) => {
+  const content = await fetchGetJSON(`/api/data/${id}/filemdinfo?from=${from}&to=${to}`)
   return content
 }
 
@@ -68,5 +108,13 @@ export {
   requestDeletedAgents,
   requestDeleteAgent,
   requestRecoverAgent,
-  requestAgentInfo
+  requestAgentInfo,
+  requestCpuInfo,
+  requestMemInfo,
+  requestLoadInfo,
+  requestNetInfo,
+  requestDiskInfo,
+  requestMountsInfo,
+  requestSshdInfo,
+  requestFileMDInfo
 }
