@@ -103,6 +103,15 @@ const requestFileMDInfo = async (id, from, to) => {
   return content
 }
 
+const requestAllRuleGroups = async () => {
+  const content = await fetchGetJSON('/api/rulegroups')
+  return content
+}
+
+const requestDeleteRuleGroup = async (id) => {
+  await fetchDeleteHead(`/api/rulegroup/${id}`)
+}
+
 export {
   requestSignIn,
   requestSignUp,
@@ -121,5 +130,7 @@ export {
   requestDiskInfo,
   requestMountsInfo,
   requestSshdInfo,
-  requestFileMDInfo
+  requestFileMDInfo,
+  requestAllRuleGroups,
+  requestDeleteRuleGroup
 }
