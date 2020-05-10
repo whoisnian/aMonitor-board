@@ -130,6 +130,15 @@ const requestDeleteReceiver = async (id) => {
   await fetchDeleteHead(`/api/receiver/${id}`)
 }
 
+const requestAllMessages = async () => {
+  const content = await fetchGetJSON('/api/messages')
+  return content
+}
+
+const requestDeleteMessage = async (id) => {
+  await fetchDeleteHead(`/api/message/${id}`)
+}
+
 export {
   requestSignIn,
   requestSignUp,
@@ -154,5 +163,7 @@ export {
   requestRuleGroup,
   requestDeleteRule,
   requestAllReceivers,
-  requestDeleteReceiver
+  requestDeleteReceiver,
+  requestAllMessages,
+  requestDeleteMessage
 }
