@@ -20,7 +20,7 @@ import {
   DialogContent,
   DialogContentText
 } from '@material-ui/core'
-import { RestoreFromTrash, Delete } from '@material-ui/icons'
+import { RestoreFromTrash, Delete, Autorenew } from '@material-ui/icons'
 import DateFnsUtils from '@date-io/date-fns'
 import { MuiPickersUtilsProvider, DateTimePicker } from '@material-ui/pickers'
 import Navigation from '../../components/navigation'
@@ -39,6 +39,7 @@ import {
 import {
   requestDeleteAgent,
   requestRecoverAgent,
+  requestUpdateAgentStatus,
   requestAgentInfo,
   requestCpuInfo,
   requestMemInfo,
@@ -59,6 +60,9 @@ const useStyles = makeStyles((theme) => ({
   },
   actionCell: {
     padding: theme.spacing(1)
+  },
+  actionButton: {
+    marginLeft: theme.spacing(1)
   },
   distroLogo: {
     verticalAlign: 'middle',
@@ -126,6 +130,11 @@ function App () {
   const [mountsData, setMountsData] = React.useState([])
   const [sshdData, setSshdData] = React.useState([])
   const [fileMDData, setFileMDData] = React.useState([])
+
+  const handleFixClick = async () => {
+    await requestUpdateAgentStatus('ok', agentInfo.id) // async
+    setAgentInfo({ ...agentInfo, status: 'ok' })
+  }
 
   const handleDeleteClick = async () => {
     await requestDeleteAgent(agentInfo.id) // async
@@ -307,12 +316,24 @@ function App () {
             <TableHead>
               <TableRow>
                 <TableCell className={classes.actionCell} colSpan={3} align='right'>
+                  {agentInfo.status === 'error' && (
+                    <Button
+                      variant='outlined'
+                      color='primary'
+                      startIcon={<Autorenew />}
+                      onClick={handleFixClick}
+                      className={classes.actionButton}
+                    >
+                      已修复
+                    </Button>
+                  )}
                   {agentInfo.deleted ? (
                     <Button
                       variant='outlined'
                       color='primary'
                       startIcon={<RestoreFromTrash />}
                       onClick={handleRecoverClick}
+                      className={classes.actionButton}
                     >
                       恢复
                     </Button>
@@ -322,6 +343,7 @@ function App () {
                       color='primary'
                       startIcon={<Delete />}
                       onClick={handleDeleteClick}
+                      className={classes.actionButton}
                     >
                       删除
                     </Button>)}
@@ -354,7 +376,7 @@ function App () {
                 </TableCell>
                 <TableCell className={classes.tableBorder}>
                   <Typography variant='inherit' color='textSecondary'>主机状态：</Typography>
-                  {agentInfo.status || 'unknown'} <StatusIcon status={agentInfo.status || 'unknown'} />
+                  <StatusIcon status={agentInfo.status || 'unknown'} />
                 </TableCell>
               </TableRow>
               <TableRow>

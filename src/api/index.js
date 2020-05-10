@@ -54,6 +54,10 @@ const requestRecoverAgent = async (id) => {
   await fetchPutHead(`/api/agent/${id}`)
 }
 
+const requestUpdateAgentStatus = async (status, id) => {
+  await fetchPostHead(`/api/agent/${id}`, { status })
+}
+
 const requestAgentInfo = async (id) => {
   const content = await fetchGetJSON(`/api/agent/${id}`)
   return content
@@ -108,6 +112,7 @@ export {
   requestDeletedAgents,
   requestDeleteAgent,
   requestRecoverAgent,
+  requestUpdateAgentStatus,
   requestAgentInfo,
   requestCpuInfo,
   requestMemInfo,
