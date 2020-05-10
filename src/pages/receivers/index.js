@@ -22,9 +22,10 @@ import {
 import { MoreHoriz } from '@material-ui/icons'
 import Navigation from '../../components/navigation'
 import {
-  requestRuleGroup,
-  requestDeleteRule
+  requestAllReceivers,
+  requestDeleteReceiver
 } from '../../api'
+import { formatDate } from '../../utils'
 
 const useStyles = makeStyles((theme) => ({
   colID: {
@@ -35,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
     textAlign: 'left'
   },
   colTime: {
-    width: '128px',
+    width: '192px',
     textAlign: 'left'
   },
   colAction: {
@@ -52,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
 function App () {
   const classes = useStyles()
 
-  const [rules, setRules] = React.useState([])
+  const [receiverList, setReceiverList] = React.useState([])
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(10)
   const [anchorEl, setAnchorEl] = React.useState(null)
@@ -79,61 +80,52 @@ function App () {
   }
 
   const handleDeleteClick = () => {
-    requestDeleteRule(anchorEl.id) // async
+    requestDeleteReceiver(anchorEl.id) // async
 
     const id = parseInt(anchorEl.id)
-    const pos = rules.findIndex((v) => v.id === id)
-    rules.splice(pos, 1)
+    const pos = receiverList.findIndex((v) => v.id === id)
+    receiverList.splice(pos, 1)
 
-    setRules(rules)
+    setReceiverList(receiverList)
     setAnchorEl(null)
   }
 
   React.useEffect(() => {
     (async () => {
-      const id = new URLSearchParams(window.location.search).get('id')
-      if (!id) window.location.href = '/rules'
-
-      const content = await requestRuleGroup(id)
-      setRules(content)
+      const content = await requestAllReceivers()
+      setReceiverList(content)
     })()
   }, [])
 
   return (
-    <Navigation title='规则管理'>
+    <Navigation title='推送管理'>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
             <TableRow>
               <TableCell className={classes.colID}>编号</TableCell>
-              <TableCell className={classes.colName}>规则名称</TableCell>
-              <TableCell className={classes.colTime}>生效目标</TableCell>
-              <TableCell className={classes.colTime}>触发条件</TableCell>
-              <TableCell className={classes.colTime}>触发事件</TableCell>
-              <TableCell className={classes.colTime}>阈值</TableCell>
-              <TableCell className={classes.colTime}>计算范围</TableCell>
-              <TableCell className={classes.colTime}>静默时间</TableCell>
-              <TableCell className={classes.colTime}>等级</TableCell>
+              <TableCell className={classes.colName}>推送名称</TableCell>
+              <TableCell className={classes.colName}>推送类型</TableCell>
+              <TableCell className={classes.colName}>推送地址</TableCell>
+              <TableCell className={classes.colName}>身份凭据</TableCell>
+              <TableCell className={classes.colTime}>创建时间</TableCell>
               <TableCell className={classes.colAction}>操作</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {(rowsPerPage > 0
-              ? rules.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              : rules
-            ).map((rule) => (
-              <TableRow hover key={rule.id}>
-                <TableCell className={classes.colID}>{rule.id}</TableCell>
-                <TableCell className={classes.colName}>{rule.name}</TableCell>
-                <TableCell className={classes.colTime}>{rule.target}</TableCell>
-                <TableCell className={classes.colTime}>{rule.addition}</TableCell>
-                <TableCell className={classes.colTime}>{rule.event}</TableCell>
-                <TableCell className={classes.colTime}>{rule.threshold}</TableCell>
-                <TableCell className={classes.colTime}>{rule.interval}</TableCell>
-                <TableCell className={classes.colTime}>{rule.silent}</TableCell>
-                <TableCell className={classes.colTime}>{rule.level}</TableCell>
+              ? receiverList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              : receiverList
+            ).map((receiver) => (
+              <TableRow hover key={receiver.id}>
+                <TableCell className={classes.colID}>{receiver.id}</TableCell>
+                <TableCell className={classes.colName}>{receiver.name}</TableCell>
+                <TableCell className={classes.colName}>{receiver.type}</TableCell>
+                <TableCell className={classes.colName}>{receiver.addr}</TableCell>
+                <TableCell className={classes.colName}>{receiver.token}</TableCell>
+                <TableCell className={classes.colTime}>{formatDate(receiver.created_at)}</TableCell>
                 <TableCell className={classes.colAction}>
-                  <IconButton id={rule.id} size='small' disableRipple disableFocusRipple onClick={handleMenuClick}>
+                  <IconButton id={receiver.id} size='small' disableRipple disableFocusRipple onClick={handleMenuClick}>
                     <MoreHoriz />
                   </IconButton>
                 </TableCell>
@@ -145,7 +137,7 @@ function App () {
                   <Paper>
                     <ClickAwayListener onClickAway={handleMenuClose}>
                       <MenuList autoFocusItem={Boolean(anchorEl)} onKeyDown={handleMenuClose}>
-                        <MenuItem onClick={handleEditClick}>编辑规则</MenuItem>
+                        <MenuItem onClick={handleEditClick}>编辑推送</MenuItem>
                         <MenuItem onClick={handleDeleteClick}>立即删除</MenuItem>
                       </MenuList>
                     </ClickAwayListener>
@@ -158,8 +150,8 @@ function App () {
             <TableRow>
               <TablePagination
                 rowsPerPageOptions={[10, 25, 50, { label: 'All', value: -1 }]}
-                colSpan={10}
-                count={rules.length}
+                colSpan={4}
+                count={receiverList.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 labelRowsPerPage='每页行数:'

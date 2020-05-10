@@ -80,6 +80,9 @@ export default function Navigation (props) {
           <ListItem button component='a' href='/rules'>
             <ListItemText primary='规则管理' />
           </ListItem>
+          <ListItem button component='a' href='/receivers'>
+            <ListItemText primary='推送管理' />
+          </ListItem>
         </List>
         <Divider />
       </Drawer>
