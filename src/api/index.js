@@ -112,6 +112,15 @@ const requestDeleteRuleGroup = async (id) => {
   await fetchDeleteHead(`/api/rulegroup/${id}`)
 }
 
+const requestRuleGroup = async (id) => {
+  const content = await fetchGetJSON(`/api/grouprules/${id}`)
+  return content
+}
+
+const requestDeleteRule = async (id) => {
+  await fetchDeleteHead(`/api/rule/${id}`)
+}
+
 export {
   requestSignIn,
   requestSignUp,
@@ -132,5 +141,7 @@ export {
   requestSshdInfo,
   requestFileMDInfo,
   requestAllRuleGroups,
-  requestDeleteRuleGroup
+  requestDeleteRuleGroup,
+  requestRuleGroup,
+  requestDeleteRule
 }

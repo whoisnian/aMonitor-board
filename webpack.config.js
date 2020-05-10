@@ -15,7 +15,8 @@ const entry = {
   overview: getEntryPage('overview'),
   agents: getEntryPage('agents'),
   agent: getEntryPage('agent'),
-  rules: getEntryPage('rules')
+  rules: getEntryPage('rules'),
+  rulegroup: getEntryPage('rulegroup')
 }
 
 const entryHtmlPlugins = Object.keys(entry).map(entryName =>
