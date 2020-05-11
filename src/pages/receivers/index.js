@@ -18,7 +18,8 @@ import {
   TableRow,
   TableCell,
   TablePagination,
-  Fab
+  Fab,
+  Typography
 } from '@material-ui/core'
 import { MoreHoriz, Add } from '@material-ui/icons'
 import Navigation from '../../components/navigation'
@@ -43,6 +44,10 @@ const useStyles = makeStyles((theme) => ({
   },
   colAddr: {
     textAlign: 'left'
+  },
+  textAddr: {
+    maxWidth: '300px',
+    overflow: 'hidden'
   },
   colToken: {
     textAlign: 'left'
@@ -154,7 +159,7 @@ function App () {
                 <TableCell className={classes.colID}>{receiver.id}</TableCell>
                 <TableCell className={classes.colType}>{receiver.type}</TableCell>
                 <TableCell className={classes.colName}>{receiver.name}</TableCell>
-                <TableCell className={classes.colAddr}>{receiver.addr}</TableCell>
+                <TableCell className={classes.colAddr}><Typography noWrap className={classes.textAddr}>{receiver.addr}</Typography></TableCell>
                 <TableCell className={classes.colToken}>{receiver.token || '无'}</TableCell>
                 <TableCell className={classes.colTime}>{formatDate(receiver.created_at)}</TableCell>
                 <TableCell className={classes.colAction}>
