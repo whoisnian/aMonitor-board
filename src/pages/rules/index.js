@@ -17,10 +17,12 @@ import {
   TableFooter,
   TableRow,
   TableCell,
-  TablePagination
+  TablePagination,
+  Fab
 } from '@material-ui/core'
-import { MoreHoriz } from '@material-ui/icons'
+import { MoreHoriz, Add } from '@material-ui/icons'
 import Navigation from '../../components/navigation'
+import RuleGroupDialog from '../../components/rulegroupdialog'
 import {
   requestAllRuleGroups,
   requestDeleteRuleGroup
@@ -47,6 +49,13 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: 0,
     paddingBottom: 0,
     color: theme.palette.text.primary
+  },
+  fab: {
+    position: 'fixed',
+    top: 'auto',
+    left: 'auto',
+    right: '30px',
+    bottom: '30px'
   }
 }))
 
@@ -57,6 +66,7 @@ function App () {
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(10)
   const [anchorEl, setAnchorEl] = React.useState(null)
+  const [dialogOpen, setDialogOpen] = React.useState(false)
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
@@ -89,6 +99,11 @@ function App () {
 
     setRuleGroupList(ruleGroupList)
     setAnchorEl(null)
+  }
+
+  const handleReload = async () => {
+    const content = await requestAllRuleGroups()
+    setRuleGroupList(content)
   }
 
   React.useEffect(() => {
@@ -159,6 +174,18 @@ function App () {
           </TableFooter>
         </Table>
       </TableContainer>
+      <Fab
+        color='primary'
+        className={classes.fab}
+        onClick={() => setDialogOpen(true)}
+      >
+        <Add />
+      </Fab>
+      <RuleGroupDialog
+        open={dialogOpen}
+        onClose={() => setDialogOpen(false)}
+        reload={handleReload}
+      />
     </Navigation>
   )
 }
