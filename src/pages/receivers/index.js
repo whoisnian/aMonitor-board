@@ -46,6 +46,7 @@ const useStyles = makeStyles((theme) => ({
     textAlign: 'left'
   },
   textAddr: {
+    display: 'inline-block',
     maxWidth: '300px',
     overflow: 'hidden'
   },
@@ -159,7 +160,7 @@ function App () {
                 <TableCell className={classes.colID}>{receiver.id}</TableCell>
                 <TableCell className={classes.colType}>{receiver.type}</TableCell>
                 <TableCell className={classes.colName}>{receiver.name}</TableCell>
-                <TableCell className={classes.colAddr}><Typography noWrap className={classes.textAddr}>{receiver.addr}</Typography></TableCell>
+                <TableCell className={classes.colAddr}><Typography variant='inherit' noWrap className={classes.textAddr}>{receiver.addr}</Typography></TableCell>
                 <TableCell className={classes.colToken}>{receiver.token || '无'}</TableCell>
                 <TableCell className={classes.colTime}>{formatDate(receiver.created_at)}</TableCell>
                 <TableCell className={classes.colAction}>
