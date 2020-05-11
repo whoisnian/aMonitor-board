@@ -17,10 +17,12 @@ import {
   TableFooter,
   TableRow,
   TableCell,
-  TablePagination
+  TablePagination,
+  Fab
 } from '@material-ui/core'
-import { MoreHoriz } from '@material-ui/icons'
+import { MoreHoriz, Add } from '@material-ui/icons'
 import Navigation from '../../components/navigation'
+import ReceiverDialog from '../../components/receiverdialog'
 import {
   requestAllReceivers,
   requestDeleteReceiver
@@ -32,7 +34,17 @@ const useStyles = makeStyles((theme) => ({
     width: '64px',
     textAlign: 'center'
   },
+  colType: {
+    width: '128px',
+    textAlign: 'center'
+  },
   colName: {
+    textAlign: 'left'
+  },
+  colAddr: {
+    textAlign: 'left'
+  },
+  colToken: {
     textAlign: 'left'
   },
   colTime: {
@@ -47,6 +59,13 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: 0,
     paddingBottom: 0,
     color: theme.palette.text.primary
+  },
+  fab: {
+    position: 'fixed',
+    top: 'auto',
+    left: 'auto',
+    right: '30px',
+    bottom: '30px'
   }
 }))
 
@@ -57,6 +76,7 @@ function App () {
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(10)
   const [anchorEl, setAnchorEl] = React.useState(null)
+  const [dialogOpen, setDialogOpen] = React.useState(false)
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
@@ -90,6 +110,11 @@ function App () {
     setAnchorEl(null)
   }
 
+  const handleReload = async () => {
+    const content = await requestAllReceivers()
+    setReceiverList(content)
+  }
+
   React.useEffect(() => {
     (async () => {
       const content = await requestAllReceivers()
@@ -104,10 +129,10 @@ function App () {
           <TableHead>
             <TableRow>
               <TableCell className={classes.colID}>编号</TableCell>
+              <TableCell className={classes.colType}>推送类型</TableCell>
               <TableCell className={classes.colName}>推送名称</TableCell>
-              <TableCell className={classes.colName}>推送类型</TableCell>
-              <TableCell className={classes.colName}>推送地址</TableCell>
-              <TableCell className={classes.colName}>身份凭据</TableCell>
+              <TableCell className={classes.colAddr}>推送地址</TableCell>
+              <TableCell className={classes.colToken}>身份凭据</TableCell>
               <TableCell className={classes.colTime}>创建时间</TableCell>
               <TableCell className={classes.colAction}>操作</TableCell>
             </TableRow>
@@ -119,10 +144,10 @@ function App () {
             ).map((receiver) => (
               <TableRow hover key={receiver.id}>
                 <TableCell className={classes.colID}>{receiver.id}</TableCell>
+                <TableCell className={classes.colType}>{receiver.type}</TableCell>
                 <TableCell className={classes.colName}>{receiver.name}</TableCell>
-                <TableCell className={classes.colName}>{receiver.type}</TableCell>
-                <TableCell className={classes.colName}>{receiver.addr}</TableCell>
-                <TableCell className={classes.colName}>{receiver.token}</TableCell>
+                <TableCell className={classes.colAddr}>{receiver.addr}</TableCell>
+                <TableCell className={classes.colToken}>{receiver.token || '无'}</TableCell>
                 <TableCell className={classes.colTime}>{formatDate(receiver.created_at)}</TableCell>
                 <TableCell className={classes.colAction}>
                   <IconButton id={receiver.id} size='small' disableRipple disableFocusRipple onClick={handleMenuClick}>
@@ -150,7 +175,7 @@ function App () {
             <TableRow>
               <TablePagination
                 rowsPerPageOptions={[10, 25, 50, { label: 'All', value: -1 }]}
-                colSpan={4}
+                colSpan={7}
                 count={receiverList.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
@@ -164,6 +189,18 @@ function App () {
           </TableFooter>
         </Table>
       </TableContainer>
+      <Fab
+        color='primary'
+        className={classes.fab}
+        onClick={() => setDialogOpen(true)}
+      >
+        <Add />
+      </Fab>
+      <ReceiverDialog
+        open={dialogOpen}
+        onClose={() => setDialogOpen(false)}
+        reload={handleReload}
+      />
     </Navigation>
   )
 }
