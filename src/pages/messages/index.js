@@ -105,6 +105,7 @@ function App () {
             <TableRow>
               <TableCell className={classes.colID}>编号</TableCell>
               <TableCell className={classes.colName}>警报内容</TableCell>
+              <TableCell className={classes.colName}>警报等级</TableCell>
               <TableCell className={classes.colName}>相关主机</TableCell>
               <TableCell className={classes.colName}>相关规则组</TableCell>
               <TableCell className={classes.colTime}>创建时间</TableCell>
@@ -119,6 +120,7 @@ function App () {
               <TableRow hover key={message.id}>
                 <TableCell className={classes.colID}>{message.id}</TableCell>
                 <TableCell className={classes.colName}>{message.content}</TableCell>
+                <TableCell className={classes.colName}>{message.level}</TableCell>
                 <TableCell className={classes.colName}>{message.agent_id}</TableCell>
                 <TableCell className={classes.colName}>{message.group_id}</TableCell>
                 <TableCell className={classes.colTime}>{formatDate(message.created_at)}</TableCell>
