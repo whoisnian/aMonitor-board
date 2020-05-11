@@ -138,6 +138,20 @@ const requestAllReceivers = async () => {
   return content
 }
 
+const requestGroupReceivers = async (id) => {
+  const content = await fetchGetJSON(`/api/receivers/${id}`)
+  return content
+}
+
+const requestAddReceiverToGroup = async (groupID, receiverID) => {
+  const content = await fetchPutHead('/api/receivergroup', { groupID, receiverID })
+  return content
+}
+
+const requestDeleteGroupReceiver = async (groupID, receiverID) => {
+  await fetchDeleteHead(`/api/receivergroup/${receiverID}/${groupID}`)
+}
+
 const requestDeleteReceiver = async (id) => {
   await fetchDeleteHead(`/api/receiver/${id}`)
 }
@@ -186,6 +200,9 @@ export {
   requestCreateRule,
   requestUpdateRule,
   requestAllReceivers,
+  requestGroupReceivers,
+  requestAddReceiverToGroup,
+  requestDeleteGroupReceiver,
   requestDeleteReceiver,
   requestUpdateReceiver,
   requestCreateReceiver,
