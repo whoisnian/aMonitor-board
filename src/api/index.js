@@ -138,6 +138,10 @@ const requestCreateReceiver = async (name, type, addr, token) => {
   await fetchPutHead('/api/receiver', { name, type, addr, token })
 }
 
+const requestUpdateReceiver = async (id, name, type, addr, token) => {
+  await fetchPostHead(`/api/receiver/${id}`, { name, type, addr, token })
+}
+
 const requestAllMessages = async () => {
   const content = await fetchGetJSON('/api/messages')
   return content
@@ -173,6 +177,7 @@ export {
   requestDeleteRule,
   requestAllReceivers,
   requestDeleteReceiver,
+  requestUpdateReceiver,
   requestCreateReceiver,
   requestAllMessages,
   requestDeleteMessage

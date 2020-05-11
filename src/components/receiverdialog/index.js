@@ -12,7 +12,7 @@ import {
   Select,
   MenuItem
 } from '@material-ui/core'
-import { requestCreateReceiver } from '../../api'
+import { requestCreateReceiver, requestUpdateReceiver } from '../../api'
 
 const useStyles = makeStyles((theme) => ({
   input: {
@@ -34,7 +34,11 @@ export default function ReceiverDialog (props) {
     const addr = addrRef.current.value
     const token = tokenRef.current.value
 
-    await requestCreateReceiver(name, type, addr, token)
+    if (props.receiver) {
+      await requestUpdateReceiver(props.receiver.id, name, type, addr, token)
+    } else {
+      await requestCreateReceiver(name, type, addr, token)
+    }
 
     props.onClose()
     props.reload()
@@ -43,13 +47,14 @@ export default function ReceiverDialog (props) {
   return (
     <div>
       <Dialog open={props.open} onClose={props.onClose}>
-        <DialogTitle>新建推送</DialogTitle>
+        <DialogTitle>{props.receiver ? '编辑推送' : '新建推送'}</DialogTitle>
         <DialogContent>
           <TextField
-            autoFocus
+            autoFocus={!props.receiver}
             id='name'
             inputRef={nameRef}
             label='推送名称'
+            defaultValue={props.receiver ? props.receiver.name : ''}
             fullWidth
             className={classes.input}
           />
@@ -58,6 +63,7 @@ export default function ReceiverDialog (props) {
             <Select
               id='type'
               inputRef={typeRef}
+              defaultValue={props.receiver ? props.receiver.type : ''}
             >
               <MenuItem value='email'>邮件</MenuItem>
               <MenuItem value='wechat'>微信Bot</MenuItem>
@@ -70,6 +76,7 @@ export default function ReceiverDialog (props) {
             id='addr'
             inputRef={addrRef}
             label='推送地址'
+            defaultValue={props.receiver ? props.receiver.addr : ''}
             fullWidth
             className={classes.input}
           />
@@ -77,6 +84,7 @@ export default function ReceiverDialog (props) {
             id='token'
             inputRef={tokenRef}
             label='身份凭据（可留空）'
+            defaultValue={props.receiver ? props.receiver.token : ''}
             fullWidth
             className={classes.input}
           />

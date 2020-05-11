@@ -77,6 +77,8 @@ function App () {
   const [rowsPerPage, setRowsPerPage] = React.useState(10)
   const [anchorEl, setAnchorEl] = React.useState(null)
   const [dialogOpen, setDialogOpen] = React.useState(false)
+  const [editorOpen, setEditorOpen] = React.useState(false)
+  const [editingReceiver, setEditingReceiver] = React.useState()
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
@@ -96,6 +98,12 @@ function App () {
   }
 
   const handleEditClick = () => {
+    const id = parseInt(anchorEl.id)
+    const pos = receiverList.findIndex((v) => v.id === id)
+
+    setEditingReceiver(receiverList[pos])
+
+    setEditorOpen(true)
     setAnchorEl(null)
   }
 
@@ -170,6 +178,12 @@ function App () {
                 </Grow>
               )}
             </Popper>
+            <ReceiverDialog
+              open={editorOpen}
+              receiver={editingReceiver}
+              onClose={() => setEditorOpen(false)}
+              reload={handleReload}
+            />
           </TableBody>
           <TableFooter>
             <TableRow>
