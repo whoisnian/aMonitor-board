@@ -35,6 +35,10 @@ const useStyles = makeStyles((theme) => ({
   colName: {
     textAlign: 'left'
   },
+  colLevel: {
+    width: '128px',
+    textAlign: 'center'
+  },
   colTime: {
     width: '192px',
     textAlign: 'left'
@@ -75,7 +79,19 @@ function App () {
     setAnchorEl(null)
   }
 
-  const handleEditClick = () => {
+  const handleRelatedAgent = () => {
+    const id = parseInt(anchorEl.id)
+    const pos = messageList.findIndex((v) => v.id === id)
+
+    window.location.href = '/agent?id=' + messageList[pos].agent_id
+    setAnchorEl(null)
+  }
+
+  const handleRelatedGroup = () => {
+    const id = parseInt(anchorEl.id)
+    const pos = messageList.findIndex((v) => v.id === id)
+
+    window.location.href = '/rulegroup?id=' + messageList[pos].group_id
     setAnchorEl(null)
   }
 
@@ -105,9 +121,7 @@ function App () {
             <TableRow>
               <TableCell className={classes.colID}>编号</TableCell>
               <TableCell className={classes.colName}>警报内容</TableCell>
-              <TableCell className={classes.colName}>警报等级</TableCell>
-              <TableCell className={classes.colName}>相关主机</TableCell>
-              <TableCell className={classes.colName}>相关规则组</TableCell>
+              <TableCell className={classes.colLevel}>警报等级</TableCell>
               <TableCell className={classes.colTime}>创建时间</TableCell>
               <TableCell className={classes.colAction}>操作</TableCell>
             </TableRow>
@@ -120,9 +134,7 @@ function App () {
               <TableRow hover key={message.id}>
                 <TableCell className={classes.colID}>{message.id}</TableCell>
                 <TableCell className={classes.colName}>{message.content}</TableCell>
-                <TableCell className={classes.colName}>{message.level}</TableCell>
-                <TableCell className={classes.colName}>{message.agent_id}</TableCell>
-                <TableCell className={classes.colName}>{message.group_id}</TableCell>
+                <TableCell className={classes.colLevel}>{message.level}</TableCell>
                 <TableCell className={classes.colTime}>{formatDate(message.created_at)}</TableCell>
                 <TableCell className={classes.colAction}>
                   <IconButton id={message.id} size='small' disableRipple disableFocusRipple onClick={handleMenuClick}>
@@ -137,7 +149,8 @@ function App () {
                   <Paper>
                     <ClickAwayListener onClickAway={handleMenuClose}>
                       <MenuList autoFocusItem={Boolean(anchorEl)} onKeyDown={handleMenuClose}>
-                        <MenuItem onClick={handleEditClick}>编辑</MenuItem>
+                        <MenuItem onClick={handleRelatedAgent}>相关主机</MenuItem>
+                        <MenuItem onClick={handleRelatedGroup}>相关规则组</MenuItem>
                         <MenuItem onClick={handleDeleteClick}>立即删除</MenuItem>
                       </MenuList>
                     </ClickAwayListener>
