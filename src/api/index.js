@@ -125,6 +125,14 @@ const requestDeleteRule = async (id) => {
   await fetchDeleteHead(`/api/rule/${id}`)
 }
 
+const requestCreateRule = async (name, target, addition, event, threshold, interval, silent, level, groupID) => {
+  await fetchPutHead('/api/rule', { name, target, addition, event, threshold, interval, silent, level, groupID })
+}
+
+const requestUpdateRule = async (id, name, target, addition, event, threshold, interval, silent, level, groupID) => {
+  await fetchPostHead(`/api/rule/${id}`, { name, target, addition, event, threshold, interval, silent, level, groupID })
+}
+
 const requestAllReceivers = async () => {
   const content = await fetchGetJSON('/api/receivers')
   return content
@@ -175,6 +183,8 @@ export {
   requestCreateRuleGroup,
   requestRuleGroup,
   requestDeleteRule,
+  requestCreateRule,
+  requestUpdateRule,
   requestAllReceivers,
   requestDeleteReceiver,
   requestUpdateReceiver,

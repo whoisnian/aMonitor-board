@@ -17,10 +17,12 @@ import {
   TableFooter,
   TableRow,
   TableCell,
-  TablePagination
+  TablePagination,
+  Fab
 } from '@material-ui/core'
-import { MoreHoriz } from '@material-ui/icons'
+import { MoreHoriz, Add } from '@material-ui/icons'
 import Navigation from '../../components/navigation'
+import RuleDialog from '../../components/ruledialog'
 import {
   requestRuleGroup,
   requestDeleteRule
@@ -46,6 +48,13 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: 0,
     paddingBottom: 0,
     color: theme.palette.text.primary
+  },
+  fab: {
+    position: 'fixed',
+    top: 'auto',
+    left: 'auto',
+    right: '30px',
+    bottom: '30px'
   }
 }))
 
@@ -56,6 +65,9 @@ function App () {
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(10)
   const [anchorEl, setAnchorEl] = React.useState(null)
+  const [dialogOpen, setDialogOpen] = React.useState(false)
+  const [editorOpen, setEditorOpen] = React.useState(false)
+  const [editingRule, setEditingRule] = React.useState()
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
@@ -75,6 +87,12 @@ function App () {
   }
 
   const handleEditClick = () => {
+    const id = parseInt(anchorEl.id)
+    const pos = rules.findIndex((v) => v.id === id)
+
+    setEditingRule(rules[pos])
+
+    setEditorOpen(true)
     setAnchorEl(null)
   }
 
@@ -87,6 +105,14 @@ function App () {
 
     setRules(rules)
     setAnchorEl(null)
+  }
+
+  const handleReload = async () => {
+    const id = new URLSearchParams(window.location.search).get('id')
+    if (!id) window.location.href = '/rules'
+
+    const content = await requestRuleGroup(id)
+    setRules(content)
   }
 
   React.useEffect(() => {
@@ -108,7 +134,7 @@ function App () {
               <TableCell className={classes.colID}>编号</TableCell>
               <TableCell className={classes.colName}>规则名称</TableCell>
               <TableCell className={classes.colTime}>生效目标</TableCell>
-              <TableCell className={classes.colTime}>触发条件</TableCell>
+              <TableCell className={classes.colTime}>额外条件</TableCell>
               <TableCell className={classes.colTime}>触发事件</TableCell>
               <TableCell className={classes.colTime}>阈值</TableCell>
               <TableCell className={classes.colTime}>计算范围</TableCell>
@@ -153,6 +179,13 @@ function App () {
                 </Grow>
               )}
             </Popper>
+            <RuleDialog
+              groupID={parseInt(new URLSearchParams(window.location.search).get('id'))}
+              open={editorOpen}
+              rule={editingRule}
+              onClose={() => setEditorOpen(false)}
+              reload={handleReload}
+            />
           </TableBody>
           <TableFooter>
             <TableRow>
@@ -172,6 +205,19 @@ function App () {
           </TableFooter>
         </Table>
       </TableContainer>
+      <Fab
+        color='primary'
+        className={classes.fab}
+        onClick={() => setDialogOpen(true)}
+      >
+        <Add />
+      </Fab>
+      <RuleDialog
+        groupID={parseInt(new URLSearchParams(window.location.search).get('id'))}
+        open={dialogOpen}
+        onClose={() => setDialogOpen(false)}
+        reload={handleReload}
+      />
     </Navigation>
   )
 }
