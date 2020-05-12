@@ -38,10 +38,50 @@ const textBeforeSpace = (raw) => {
   return raw.substr(0, raw.indexOf(' '))
 }
 
+const agentListFromLS = () => {
+  const str = window.localStorage.getItem('agentList')
+  return (str ? JSON.parse(str) : [])
+}
+
+const pushAgentToLS = (agent) => {
+  const str = window.localStorage.getItem('agentList')
+  const list = (str ? JSON.parse(str) : [])
+
+  const index = list.findIndex((v) => v.id === agent.id)
+  if (index === -1)list.push(agent)
+  while (list.length > 5) {
+    list.shift()
+  }
+
+  window.localStorage.setItem('agentList', JSON.stringify(list))
+}
+
+const groupListFromLS = () => {
+  const str = window.localStorage.getItem('groupList')
+  return (str ? JSON.parse(str) : [])
+}
+
+const pushGroupToLS = (group) => {
+  const str = window.localStorage.getItem('groupList')
+  const list = (str ? JSON.parse(str) : [])
+
+  const index = list.findIndex((v) => v.id === group.id)
+  if (index === -1)list.push(group)
+  while (list.length > 5) {
+    list.shift()
+  }
+
+  window.localStorage.setItem('groupList', JSON.stringify(list))
+}
+
 export {
   PackageVersion,
   calcFromBytes,
   calcFromKB,
   formatDate,
-  textBeforeSpace
+  textBeforeSpace,
+  agentListFromLS,
+  pushAgentToLS,
+  groupListFromLS,
+  pushGroupToLS
 }

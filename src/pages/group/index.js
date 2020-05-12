@@ -25,8 +25,10 @@ import Navigation from '../../components/navigation'
 import RuleDialog from '../../components/ruledialog'
 import {
   requestGroupRules,
-  requestDeleteRule
+  requestDeleteRule,
+  requestGroupInfo
 } from '../../api'
+import { pushGroupToLS } from '../../utils'
 
 const useStyles = makeStyles((theme) => ({
   colID: {
@@ -122,6 +124,9 @@ function App () {
 
       const content = await requestGroupRules(id)
       setRules(content)
+
+      const info = await requestGroupInfo(id)
+      pushGroupToLS(info)
     })()
   }, [])
 

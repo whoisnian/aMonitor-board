@@ -50,7 +50,7 @@ import {
   requestSshdInfo,
   requestFileMDInfo
 } from '../../api'
-import { calcFromKB, formatDate, textBeforeSpace } from '../../utils'
+import { calcFromKB, formatDate, textBeforeSpace, pushAgentToLS } from '../../utils'
 
 const useStyles = makeStyles((theme) => ({
   tableBorder: {
@@ -165,6 +165,7 @@ function App () {
 
       const content = await requestAgentInfo(id)
       setAgentInfo(content)
+      pushAgentToLS(content)
     })()
   }, [])
 
