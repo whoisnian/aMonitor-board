@@ -1,29 +1,117 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import { makeStyles } from '@material-ui/core/styles'
 import {
   CssBaseline,
-  Button,
-  Typography
+  Grid,
+  Card,
+  CardHeader,
+  CardContent,
+  Typography,
+  ListItem
 } from '@material-ui/core'
 import Navigation from '../../components/navigation'
+import { requestOverviewInfo } from '../../api'
+import { agentListFromLS, groupListFromLS } from '../../utils'
+
+const useStyles = makeStyles((theme) => ({
+  messageCard: {
+    backgroundColor: theme.palette.info.light
+  },
+  alarmCard: {
+    backgroundColor: theme.palette.error.light
+  },
+  okCard: {
+    backgroundColor: theme.palette.success.light
+  }
+}))
 
 function App () {
+  const classes = useStyles()
+
+  const [info, setInfo] = React.useState(null)
+  const [recentAgents, setRecentAgents] = React.useState([])
+  const [recentGroups, setRecentGroups] = React.useState([])
+
+  const handleAgentClick = (id) => {
+    window.location.href = '/agent?id=' + id
+  }
+
+  const handleGroupClick = (id) => {
+    window.location.href = '/group?id=' + id
+  }
+
+  React.useEffect(() => {
+    (async () => {
+      const content = await requestOverviewInfo()
+      setInfo(content)
+    })()
+    setRecentAgents(agentListFromLS)
+    setRecentGroups(groupListFromLS)
+  }, [])
+
   return (
     <Navigation title='概览'>
-      <Button variant='contained' color='primary'>
-        Hello World
-      </Button>
-      <Typography variant='h2'>
-          Consequat mauris nunc congue nisi vitae suscipit. Fringilla est ullamcorper eget nulla
-          facilisi etiam dignissim diam. Pulvinar elementum integer enim neque volutpat ac
-          tincidunt. Ornare suspendisse sed nisi lacus sed viverra tellus. Purus sit amet volutpat
-          consequat mauris. Elementum eu facilisis sed odio morbi. Euismod lacinia at quis risus sed
-          vulputate odio. Morbi tincidunt ornare massa eget egestas purus viverra accumsan in. In
-          hendrerit gravida rutrum quisque non tellus orci ac. Pellentesque nec nam aliquam sem et
-          tortor. Habitant morbi tristique senectus et. Adipiscing elit duis tristique sollicitudin
-          nibh sit. Ornare aenean euismod elementum nisi quis eleifend. Commodo viverra maecenas
-          accumsan lacus vel facilisis. Nulla posuere sollicitudin aliquam ultrices sagittis orci a.
-      </Typography>
+      <Grid container spacing={2}>
+        <Grid item xs={12} sm={4} md={4} lg={3}>
+          <Card className={classes.messageCard}>
+            <CardHeader title='近7日警报' />
+            <CardContent>
+              <Typography variant='h5'>
+                {info ? info.messagesCount : 'loading'}
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={12} sm={4} md={4} lg={3}>
+          <Card className={classes.alarmCard}>
+            <CardHeader title='正在报警' />
+            <CardContent>
+              <Typography variant='h5'>
+                {info ? info.errorAgentsCount : 'loading'}
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={12} sm={4} md={4} lg={3}>
+          <Card className={classes.okCard}>
+            <CardHeader title='运行正常' />
+            <CardContent>
+              <Typography variant='h5'>
+                {info ? info.okAgentsCount : 'loading'}
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={12} sm={12} md={6} lg={6}>
+          <Card>
+            <CardHeader title='最近使用主机' />
+            <CardContent>
+              {recentAgents.map((agent) => (
+                <ListItem key={agent.id} button onClick={() => handleAgentClick(agent.id)}>
+                  <Typography noWrap>
+                    {agent.id}. {agent.hostname} (IP: {agent.ip})
+                  </Typography>
+                </ListItem>
+              ))}
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={12} sm={12} md={6} lg={6}>
+          <Card>
+            <CardHeader title='最近使用规则组' />
+            <CardContent>
+              {recentGroups.map((group) => (
+                <ListItem key={group.id} button onClick={() => handleGroupClick(group.id)}>
+                  <Typography noWrap>
+                    {group.id}. {group.name}
+                  </Typography>
+                </ListItem>
+              ))}
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
     </Navigation>
   )
 }

@@ -108,6 +108,11 @@ const requestAllGroups = async () => {
   return content
 }
 
+const requestGroupInfo = async (id) => {
+  const content = fetchGetJSON(`/api/group/${id}`)
+  return content
+}
+
 const requestDeleteGroup = async (id) => {
   await fetchDeleteHead(`/api/group/${id}`)
 }
@@ -195,6 +200,11 @@ const requestAddAgentToGroup = async (groupID, agentID) => {
   await fetchPostHead('/api/agentgroup', { groupID, agentID })
 }
 
+const requestOverviewInfo = async () => {
+  const content = await fetchGetJSON('/api/overview')
+  return content
+}
+
 export {
   requestSignIn,
   requestSignUp,
@@ -215,6 +225,7 @@ export {
   requestSshdInfo,
   requestFileMDInfo,
   requestAllGroups,
+  requestGroupInfo,
   requestDeleteGroup,
   requestCreateGroup,
   requestGroupRules,
@@ -234,5 +245,6 @@ export {
   requestAgentMessages,
   requestGroupAgents,
   requestDeleteGroupAgent,
-  requestAddAgentToGroup
+  requestAddAgentToGroup,
+  requestOverviewInfo
 }
