@@ -173,6 +173,11 @@ const requestDeleteMessage = async (id) => {
   await fetchDeleteHead(`/api/message/${id}`)
 }
 
+const requestAgentRules = async (id) => {
+  const content = await fetchGetJSON(`/api/agentrules/${id}`)
+  return content
+}
+
 export {
   requestSignIn,
   requestSignUp,
@@ -207,5 +212,6 @@ export {
   requestUpdateReceiver,
   requestCreateReceiver,
   requestAllMessages,
-  requestDeleteMessage
+  requestDeleteMessage,
+  requestAgentRules
 }
