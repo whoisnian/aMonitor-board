@@ -103,20 +103,20 @@ const requestFileMDInfo = async (id, from, to) => {
   return content
 }
 
-const requestAllRuleGroups = async () => {
-  const content = await fetchGetJSON('/api/rulegroups')
+const requestAllGroups = async () => {
+  const content = await fetchGetJSON('/api/groups')
   return content
 }
 
-const requestDeleteRuleGroup = async (id) => {
+const requestDeleteGroup = async (id) => {
   await fetchDeleteHead(`/api/rulegroup/${id}`)
 }
 
-const requestCreateRuleGroup = async (name) => {
-  await fetchPutHead('/api/rulegroup', { name })
+const requestCreateGroup = async (name) => {
+  await fetchPostHead('/api/group', { name })
 }
 
-const requestRuleGroup = async (id) => {
+const requestGroupRules = async (id) => {
   const content = await fetchGetJSON(`/api/grouprules/${id}`)
   return content
 }
@@ -126,11 +126,11 @@ const requestDeleteRule = async (id) => {
 }
 
 const requestCreateRule = async (name, target, addition, event, threshold, interval, silent, level, groupID) => {
-  await fetchPutHead('/api/rule', { name, target, addition, event, threshold, interval, silent, level, groupID })
+  await fetchPostHead('/api/rule', { name, target, addition, event, threshold, interval, silent, level, groupID })
 }
 
 const requestUpdateRule = async (id, name, target, addition, event, threshold, interval, silent, level, groupID) => {
-  await fetchPostHead(`/api/rule/${id}`, { name, target, addition, event, threshold, interval, silent, level, groupID })
+  await fetchPutHead(`/api/rule/${id}`, { name, target, addition, event, threshold, interval, silent, level, groupID })
 }
 
 const requestAllReceivers = async () => {
@@ -144,7 +144,7 @@ const requestGroupReceivers = async (id) => {
 }
 
 const requestAddReceiverToGroup = async (groupID, receiverID) => {
-  const content = await fetchPutHead('/api/receivergroup', { groupID, receiverID })
+  const content = await fetchPostHead('/api/receivergroup', { groupID, receiverID })
   return content
 }
 
@@ -157,11 +157,11 @@ const requestDeleteReceiver = async (id) => {
 }
 
 const requestCreateReceiver = async (name, type, addr, token) => {
-  await fetchPutHead('/api/receiver', { name, type, addr, token })
+  await fetchPostHead('/api/receiver', { name, type, addr, token })
 }
 
 const requestUpdateReceiver = async (id, name, type, addr, token) => {
-  await fetchPostHead(`/api/receiver/${id}`, { name, type, addr, token })
+  await fetchPutHead(`/api/receiver/${id}`, { name, type, addr, token })
 }
 
 const requestAllMessages = async () => {
@@ -192,10 +192,10 @@ export {
   requestMountsInfo,
   requestSshdInfo,
   requestFileMDInfo,
-  requestAllRuleGroups,
-  requestDeleteRuleGroup,
-  requestCreateRuleGroup,
-  requestRuleGroup,
+  requestAllGroups,
+  requestDeleteGroup,
+  requestCreateGroup,
+  requestGroupRules,
   requestDeleteRule,
   requestCreateRule,
   requestUpdateRule,

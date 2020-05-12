@@ -20,7 +20,7 @@ import {
   DialogContent,
   DialogContentText
 } from '@material-ui/core'
-import { RestoreFromTrash, Delete, Autorenew } from '@material-ui/icons'
+import { RestoreFromTrash, Delete, Autorenew, Security, Feedback } from '@material-ui/icons'
 import DateFnsUtils from '@date-io/date-fns'
 import { MuiPickersUtilsProvider, DateTimePicker } from '@material-ui/pickers'
 import Navigation from '../../components/navigation'
@@ -316,6 +316,24 @@ function App () {
             <TableHead>
               <TableRow>
                 <TableCell className={classes.actionCell} colSpan={3} align='right'>
+                  <Button
+                    variant='outlined'
+                    color='primary'
+                    startIcon={<Security />}
+                    href={'/agentrules?id=' + agentInfo.id}
+                    className={classes.actionButton}
+                  >
+                    已用规则
+                  </Button>
+                  <Button
+                    variant='outlined'
+                    color='primary'
+                    startIcon={<Feedback />}
+                    href={'/agentmessages?id=' + agentInfo.id}
+                    className={classes.actionButton}
+                  >
+                    报警历史
+                  </Button>
                   {agentInfo.status === 'error' && (
                     <Button
                       variant='outlined'

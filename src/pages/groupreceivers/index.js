@@ -119,7 +119,7 @@ function App () {
 
   const handleDeleteClick = () => {
     const groupID = new URLSearchParams(window.location.search).get('id')
-    if (!groupID) window.location.href = '/rules'
+    if (!groupID) window.location.href = '/groups'
 
     requestDeleteGroupReceiver(groupID, anchorEl.id) // async
 
@@ -133,7 +133,7 @@ function App () {
 
   const handleReload = async () => {
     const id = new URLSearchParams(window.location.search).get('id')
-    if (!id) window.location.href = '/rules'
+    if (!id) window.location.href = '/groups'
 
     const content = await requestGroupReceivers(id)
     setReceiverList(content)
@@ -149,7 +149,7 @@ function App () {
 
   const handleAddToGroup = async (receiverID) => {
     const groupID = new URLSearchParams(window.location.search).get('id')
-    if (!groupID) window.location.href = '/rules'
+    if (!groupID) window.location.href = '/groups'
 
     await requestAddReceiverToGroup(parseInt(groupID), receiverID)
 
@@ -165,7 +165,7 @@ function App () {
   React.useEffect(() => {
     (async () => {
       const id = new URLSearchParams(window.location.search).get('id')
-      if (!id) window.location.href = '/rules'
+      if (!id) window.location.href = '/groups'
 
       const content = await requestGroupReceivers(id)
       setReceiverList(content)

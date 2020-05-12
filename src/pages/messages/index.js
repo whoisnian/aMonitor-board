@@ -91,7 +91,7 @@ function App () {
     const id = parseInt(anchorEl.id)
     const pos = messageList.findIndex((v) => v.id === id)
 
-    window.location.href = '/rulegroup?id=' + messageList[pos].group_id
+    window.location.href = '/group?id=' + messageList[pos].group_id
     setAnchorEl(null)
   }
 

@@ -22,12 +22,11 @@ import {
 } from '@material-ui/core'
 import { MoreHoriz, Add } from '@material-ui/icons'
 import Navigation from '../../components/navigation'
-import RuleGroupDialog from '../../components/rulegroupdialog'
+import RuleDialog from '../../components/ruledialog'
 import {
-  requestAllRuleGroups,
-  requestDeleteRuleGroup
+  requestGroupRules,
+  requestDeleteRule
 } from '../../api'
-import { formatDate } from '../../utils'
 
 const useStyles = makeStyles((theme) => ({
   colID: {
@@ -38,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
     textAlign: 'left'
   },
   colTime: {
-    width: '192px',
+    width: '128px',
     textAlign: 'left'
   },
   colAction: {
@@ -62,11 +61,13 @@ const useStyles = makeStyles((theme) => ({
 function App () {
   const classes = useStyles()
 
-  const [ruleGroupList, setRuleGroupList] = React.useState([])
+  const [rules, setRules] = React.useState([])
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(10)
   const [anchorEl, setAnchorEl] = React.useState(null)
   const [dialogOpen, setDialogOpen] = React.useState(false)
+  const [editorOpen, setEditorOpen] = React.useState(false)
+  const [editingRule, setEditingRule] = React.useState()
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
@@ -85,36 +86,42 @@ function App () {
     setAnchorEl(null)
   }
 
-  const handleDetailsClick = () => {
-    window.location.href = '/rulegroup?id=' + anchorEl.id
-    setAnchorEl(null)
-  }
+  const handleEditClick = () => {
+    const id = parseInt(anchorEl.id)
+    const pos = rules.findIndex((v) => v.id === id)
 
-  const handleReceiversClick = () => {
-    window.location.href = '/groupreceivers?id=' + anchorEl.id
+    setEditingRule(rules[pos])
+
+    setEditorOpen(true)
     setAnchorEl(null)
   }
 
   const handleDeleteClick = () => {
-    requestDeleteRuleGroup(anchorEl.id) // async
+    requestDeleteRule(anchorEl.id) // async
 
     const id = parseInt(anchorEl.id)
-    const pos = ruleGroupList.findIndex((v) => v.id === id)
-    ruleGroupList.splice(pos, 1)
+    const pos = rules.findIndex((v) => v.id === id)
+    rules.splice(pos, 1)
 
-    setRuleGroupList(ruleGroupList)
+    setRules(rules)
     setAnchorEl(null)
   }
 
   const handleReload = async () => {
-    const content = await requestAllRuleGroups()
-    setRuleGroupList(content)
+    const id = new URLSearchParams(window.location.search).get('id')
+    if (!id) window.location.href = '/groups'
+
+    const content = await requestGroupRules(id)
+    setRules(content)
   }
 
   React.useEffect(() => {
     (async () => {
-      const content = await requestAllRuleGroups()
-      setRuleGroupList(content)
+      const id = new URLSearchParams(window.location.search).get('id')
+      if (!id) window.location.href = '/groups'
+
+      const content = await requestGroupRules(id)
+      setRules(content)
     })()
   }, [])
 
@@ -125,22 +132,34 @@ function App () {
           <TableHead>
             <TableRow>
               <TableCell className={classes.colID}>编号</TableCell>
-              <TableCell className={classes.colName}>规则组名称</TableCell>
-              <TableCell className={classes.colTime}>创建时间</TableCell>
+              <TableCell className={classes.colName}>规则名称</TableCell>
+              <TableCell className={classes.colTime}>生效目标</TableCell>
+              <TableCell className={classes.colTime}>额外条件</TableCell>
+              <TableCell className={classes.colTime}>触发事件</TableCell>
+              <TableCell className={classes.colTime}>阈值</TableCell>
+              <TableCell className={classes.colTime}>计算范围</TableCell>
+              <TableCell className={classes.colTime}>静默时间</TableCell>
+              <TableCell className={classes.colTime}>等级</TableCell>
               <TableCell className={classes.colAction}>操作</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {(rowsPerPage > 0
-              ? ruleGroupList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              : ruleGroupList
-            ).map((ruleGroup) => (
-              <TableRow hover key={ruleGroup.id}>
-                <TableCell className={classes.colID}>{ruleGroup.id}</TableCell>
-                <TableCell className={classes.colName}>{ruleGroup.name}</TableCell>
-                <TableCell className={classes.colTime}>{formatDate(ruleGroup.created_at)}</TableCell>
+              ? rules.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              : rules
+            ).map((rule) => (
+              <TableRow hover key={rule.id}>
+                <TableCell className={classes.colID}>{rule.id}</TableCell>
+                <TableCell className={classes.colName}>{rule.name}</TableCell>
+                <TableCell className={classes.colTime}>{rule.target}</TableCell>
+                <TableCell className={classes.colTime}>{rule.addition}</TableCell>
+                <TableCell className={classes.colTime}>{rule.event}</TableCell>
+                <TableCell className={classes.colTime}>{rule.threshold}</TableCell>
+                <TableCell className={classes.colTime}>{rule.interval}</TableCell>
+                <TableCell className={classes.colTime}>{rule.silent}</TableCell>
+                <TableCell className={classes.colTime}>{rule.level}</TableCell>
                 <TableCell className={classes.colAction}>
-                  <IconButton id={ruleGroup.id} size='small' disableRipple disableFocusRipple onClick={handleMenuClick}>
+                  <IconButton id={rule.id} size='small' disableRipple disableFocusRipple onClick={handleMenuClick}>
                     <MoreHoriz />
                   </IconButton>
                 </TableCell>
@@ -152,8 +171,7 @@ function App () {
                   <Paper>
                     <ClickAwayListener onClickAway={handleMenuClose}>
                       <MenuList autoFocusItem={Boolean(anchorEl)} onKeyDown={handleMenuClose}>
-                        <MenuItem onClick={handleDetailsClick}>查看详情</MenuItem>
-                        <MenuItem onClick={handleReceiversClick}>管理推送</MenuItem>
+                        <MenuItem onClick={handleEditClick}>编辑规则</MenuItem>
                         <MenuItem onClick={handleDeleteClick}>立即删除</MenuItem>
                       </MenuList>
                     </ClickAwayListener>
@@ -161,13 +179,20 @@ function App () {
                 </Grow>
               )}
             </Popper>
+            <RuleDialog
+              groupID={parseInt(new URLSearchParams(window.location.search).get('id'))}
+              open={editorOpen}
+              rule={editingRule}
+              onClose={() => setEditorOpen(false)}
+              reload={handleReload}
+            />
           </TableBody>
           <TableFooter>
             <TableRow>
               <TablePagination
                 rowsPerPageOptions={[10, 25, 50, { label: 'All', value: -1 }]}
-                colSpan={4}
-                count={ruleGroupList.length}
+                colSpan={10}
+                count={rules.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 labelRowsPerPage='每页行数:'
@@ -187,7 +212,8 @@ function App () {
       >
         <Add />
       </Fab>
-      <RuleGroupDialog
+      <RuleDialog
+        groupID={parseInt(new URLSearchParams(window.location.search).get('id'))}
         open={dialogOpen}
         onClose={() => setDialogOpen(false)}
         reload={handleReload}

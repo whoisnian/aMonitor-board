@@ -15,8 +15,8 @@ const entry = {
   overview: getEntryPage('overview'),
   agents: getEntryPage('agents'),
   agent: getEntryPage('agent'),
-  rules: getEntryPage('rules'),
-  rulegroup: getEntryPage('rulegroup'),
+  groups: getEntryPage('groups'),
+  group: getEntryPage('group'),
   receivers: getEntryPage('receivers'),
   messages: getEntryPage('messages'),
   groupreceivers: getEntryPage('groupreceivers')

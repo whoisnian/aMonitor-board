@@ -7,14 +7,14 @@ import {
   TextField,
   Button
 } from '@material-ui/core'
-import { requestCreateRuleGroup } from '../../api'
+import { requestCreateGroup } from '../../api'
 
-export default function RuleGroupDialog (props) {
+export default function GroupDialog (props) {
   const nameRef = React.useRef()
 
   const handleOK = async () => {
     const name = nameRef.current.value
-    await requestCreateRuleGroup(name)
+    await requestCreateGroup(name)
     props.onClose()
     props.reload()
   }
