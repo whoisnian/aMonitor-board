@@ -20,6 +20,7 @@ const entry = {
   receivers: getEntryPage('receivers'),
   messages: getEntryPage('messages'),
   groupreceivers: getEntryPage('groupreceivers'),
+  groupagents: getEntryPage('groupagents'),
   agentrules: getEntryPage('agentrules'),
   agentmessages: getEntryPage('agentmessages')
 }

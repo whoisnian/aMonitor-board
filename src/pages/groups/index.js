@@ -90,6 +90,11 @@ function App () {
     setAnchorEl(null)
   }
 
+  const handleAgentsClick = () => {
+    window.location.href = '/groupagents?id=' + anchorEl.id
+    setAnchorEl(null)
+  }
+
   const handleReceiversClick = () => {
     window.location.href = '/groupreceivers?id=' + anchorEl.id
     setAnchorEl(null)
@@ -153,6 +158,7 @@ function App () {
                     <ClickAwayListener onClickAway={handleMenuClose}>
                       <MenuList autoFocusItem={Boolean(anchorEl)} onKeyDown={handleMenuClose}>
                         <MenuItem onClick={handleDetailsClick}>查看详情</MenuItem>
+                        <MenuItem onClick={handleAgentsClick}>管理主机</MenuItem>
                         <MenuItem onClick={handleReceiversClick}>管理推送</MenuItem>
                         <MenuItem onClick={handleDeleteClick}>立即删除</MenuItem>
                       </MenuList>

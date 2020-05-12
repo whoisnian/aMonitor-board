@@ -109,7 +109,7 @@ const requestAllGroups = async () => {
 }
 
 const requestDeleteGroup = async (id) => {
-  await fetchDeleteHead(`/api/rulegroup/${id}`)
+  await fetchDeleteHead(`/api/group/${id}`)
 }
 
 const requestCreateGroup = async (name) => {
@@ -144,8 +144,7 @@ const requestGroupReceivers = async (id) => {
 }
 
 const requestAddReceiverToGroup = async (groupID, receiverID) => {
-  const content = await fetchPostHead('/api/receivergroup', { groupID, receiverID })
-  return content
+  await fetchPostHead('/api/receivergroup', { groupID, receiverID })
 }
 
 const requestDeleteGroupReceiver = async (groupID, receiverID) => {
@@ -181,6 +180,19 @@ const requestAgentRules = async (id) => {
 const requestAgentMessages = async (id) => {
   const content = await fetchGetJSON(`/api/agentmessages/${id}`)
   return content
+}
+
+const requestGroupAgents = async (id) => {
+  const content = await fetchGetJSON(`/api/groupagents/${id}`)
+  return content
+}
+
+const requestDeleteGroupAgent = async (groupID, agentID) => {
+  await fetchDeleteHead(`/api/agentgroup/${agentID}/${groupID}`)
+}
+
+const requestAddAgentToGroup = async (groupID, agentID) => {
+  await fetchPostHead('/api/agentgroup', { groupID, agentID })
 }
 
 export {
@@ -219,5 +231,8 @@ export {
   requestAllMessages,
   requestDeleteMessage,
   requestAgentRules,
-  requestAgentMessages
+  requestAgentMessages,
+  requestGroupAgents,
+  requestDeleteGroupAgent,
+  requestAddAgentToGroup
 }
