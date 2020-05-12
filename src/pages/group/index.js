@@ -165,27 +165,6 @@ function App () {
                 </TableCell>
               </TableRow>
             ))}
-            <Popper open={Boolean(anchorEl)} anchorEl={anchorEl} transition disablePortal>
-              {({ TransitionProps, placement }) => (
-                <Grow {...TransitionProps} style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}>
-                  <Paper>
-                    <ClickAwayListener onClickAway={handleMenuClose}>
-                      <MenuList autoFocusItem={Boolean(anchorEl)} onKeyDown={handleMenuClose}>
-                        <MenuItem onClick={handleEditClick}>编辑规则</MenuItem>
-                        <MenuItem onClick={handleDeleteClick}>立即删除</MenuItem>
-                      </MenuList>
-                    </ClickAwayListener>
-                  </Paper>
-                </Grow>
-              )}
-            </Popper>
-            <RuleDialog
-              groupID={parseInt(new URLSearchParams(window.location.search).get('id'))}
-              open={editorOpen}
-              rule={editingRule}
-              onClose={() => setEditorOpen(false)}
-              reload={handleReload}
-            />
           </TableBody>
           <TableFooter>
             <TableRow>
@@ -205,6 +184,27 @@ function App () {
           </TableFooter>
         </Table>
       </TableContainer>
+      <Popper open={Boolean(anchorEl)} anchorEl={anchorEl} transition disablePortal>
+        {({ TransitionProps, placement }) => (
+          <Grow {...TransitionProps} style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}>
+            <Paper>
+              <ClickAwayListener onClickAway={handleMenuClose}>
+                <MenuList autoFocusItem={Boolean(anchorEl)} onKeyDown={handleMenuClose}>
+                  <MenuItem onClick={handleEditClick}>编辑规则</MenuItem>
+                  <MenuItem onClick={handleDeleteClick}>立即删除</MenuItem>
+                </MenuList>
+              </ClickAwayListener>
+            </Paper>
+          </Grow>
+        )}
+      </Popper>
+      <RuleDialog
+        groupID={parseInt(new URLSearchParams(window.location.search).get('id'))}
+        open={editorOpen}
+        rule={editingRule}
+        onClose={() => setEditorOpen(false)}
+        reload={handleReload}
+      />
       <Fab
         color='primary'
         className={classes.fab}

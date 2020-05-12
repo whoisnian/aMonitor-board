@@ -198,20 +198,6 @@ function App () {
                 </TableCell>
               </TableRow>
             ))}
-            <Popper open={Boolean(anchorEl)} anchorEl={anchorEl} transition disablePortal>
-              {({ TransitionProps, placement }) => (
-                <Grow {...TransitionProps} style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}>
-                  <Paper>
-                    <ClickAwayListener onClickAway={handleMenuClose}>
-                      <MenuList autoFocusItem={Boolean(anchorEl)} onKeyDown={handleMenuClose}>
-                        <MenuItem onClick={handleDetailsClick}>查看详情</MenuItem>
-                        <MenuItem onClick={handleDeleteClick}>立即删除</MenuItem>
-                      </MenuList>
-                    </ClickAwayListener>
-                  </Paper>
-                </Grow>
-              )}
-            </Popper>
           </TableBody>
           <TableFooter>
             <TableRow>
@@ -231,6 +217,20 @@ function App () {
           </TableFooter>
         </Table>
       </TableContainer>
+      <Popper open={Boolean(anchorEl)} anchorEl={anchorEl} transition disablePortal>
+        {({ TransitionProps, placement }) => (
+          <Grow {...TransitionProps} style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}>
+            <Paper>
+              <ClickAwayListener onClickAway={handleMenuClose}>
+                <MenuList autoFocusItem={Boolean(anchorEl)} onKeyDown={handleMenuClose}>
+                  <MenuItem onClick={handleDetailsClick}>查看详情</MenuItem>
+                  <MenuItem onClick={handleDeleteClick}>立即删除</MenuItem>
+                </MenuList>
+              </ClickAwayListener>
+            </Paper>
+          </Grow>
+        )}
+      </Popper>
       <Fab
         color='primary'
         className={classes.fab}

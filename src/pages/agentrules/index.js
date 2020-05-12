@@ -132,20 +132,6 @@ function App () {
                 </TableCell>
               </TableRow>
             ))}
-            <Popper open={Boolean(anchorEl)} anchorEl={anchorEl} transition disablePortal>
-              {({ TransitionProps, placement }) => (
-                <Grow {...TransitionProps} style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}>
-                  <Paper>
-                    <ClickAwayListener onClickAway={handleMenuClose}>
-                      <MenuList autoFocusItem={Boolean(anchorEl)} onKeyDown={handleMenuClose}>
-                        <MenuItem onClick={handleGroupClick}>查看规则组</MenuItem>
-                        <MenuItem onClick={handleReceicersClick}>查看推送者</MenuItem>
-                      </MenuList>
-                    </ClickAwayListener>
-                  </Paper>
-                </Grow>
-              )}
-            </Popper>
           </TableBody>
           <TableFooter>
             <TableRow>
@@ -165,6 +151,20 @@ function App () {
           </TableFooter>
         </Table>
       </TableContainer>
+      <Popper open={Boolean(anchorEl)} anchorEl={anchorEl} transition disablePortal>
+        {({ TransitionProps, placement }) => (
+          <Grow {...TransitionProps} style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}>
+            <Paper>
+              <ClickAwayListener onClickAway={handleMenuClose}>
+                <MenuList autoFocusItem={Boolean(anchorEl)} onKeyDown={handleMenuClose}>
+                  <MenuItem onClick={handleGroupClick}>查看规则组</MenuItem>
+                  <MenuItem onClick={handleReceicersClick}>查看推送者</MenuItem>
+                </MenuList>
+              </ClickAwayListener>
+            </Paper>
+          </Grow>
+        )}
+      </Popper>
     </Navigation>
   )
 }
