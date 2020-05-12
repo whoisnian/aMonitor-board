@@ -178,6 +178,11 @@ const requestAgentRules = async (id) => {
   return content
 }
 
+const requestAgentMessages = async (id) => {
+  const content = await fetchGetJSON(`/api/agentmessages/${id}`)
+  return content
+}
+
 export {
   requestSignIn,
   requestSignUp,
@@ -213,5 +218,6 @@ export {
   requestCreateReceiver,
   requestAllMessages,
   requestDeleteMessage,
-  requestAgentRules
+  requestAgentRules,
+  requestAgentMessages
 }
