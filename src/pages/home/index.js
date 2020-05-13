@@ -126,8 +126,8 @@ function Detail () {
           <GitHubButton href='https://github.com/whoisnian/aMonitor-board'>
             board
           </GitHubButton>
-          <GitHubButton href='https://github.com/whoisnian/aMonitor-source'>
-            source
+          <GitHubButton href='https://github.com/whoisnian/aMonitor-document'>
+            document
           </GitHubButton>
         </Box>
       </Box>
