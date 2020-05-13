@@ -401,11 +401,11 @@ function App () {
               <TableRow>
                 <TableCell colSpan={2}>
                   <Typography variant='inherit' color='textSecondary'>CPU型号：</Typography>
-                  {agentInfo.cpu_model}
+                  {agentInfo.cpu_model || 'unknown'}
                 </TableCell>
                 <TableCell className={classes.tableBorder}>
                   <Typography variant='inherit' color='textSecondary'>CPU核心数：</Typography>
-                  {agentInfo.cpu_cores}
+                  {agentInfo.cpu_cores || 'unknown'}
                 </TableCell>
               </TableRow>
             </TableBody>
