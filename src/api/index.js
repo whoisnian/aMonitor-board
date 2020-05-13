@@ -216,7 +216,7 @@ const requestPreference = async (key) => {
 }
 
 const requestUpdatePreference = async (key, value) => {
-  await fetchPostHead('/api/preference', { key, value })
+  await fetchPutHead('/api/preference', { key, value })
 }
 
 export {

@@ -22,7 +22,8 @@ const entry = {
   groupreceivers: getEntryPage('groupreceivers'),
   groupagents: getEntryPage('groupagents'),
   agentrules: getEntryPage('agentrules'),
-  agentmessages: getEntryPage('agentmessages')
+  agentmessages: getEntryPage('agentmessages'),
+  preferences: getEntryPage('preferences')
 }
 
 const entryHtmlPlugins = Object.keys(entry).map(entryName =>

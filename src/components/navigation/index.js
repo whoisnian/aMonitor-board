@@ -86,6 +86,9 @@ export default function Navigation (props) {
           <ListItem button component='a' href='/messages'>
             <ListItemText primary='警报历史' />
           </ListItem>
+          <ListItem button component='a' href='/preferences'>
+            <ListItemText primary='系统设置' />
+          </ListItem>
         </List>
         <Divider />
       </Drawer>
