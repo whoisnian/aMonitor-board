@@ -205,6 +205,20 @@ const requestOverviewInfo = async () => {
   return content
 }
 
+const requestAllPreferences = async () => {
+  const content = await fetchGetJSON('/api/preferences')
+  return content
+}
+
+const requestPreference = async (key) => {
+  const content = await fetchGetJSON('/api/preference?key=' + key)
+  return content
+}
+
+const requestUpdatePreference = async (key, value) => {
+  await fetchPostHead('/api/preference', { key, value })
+}
+
 export {
   requestSignIn,
   requestSignUp,
@@ -246,5 +260,8 @@ export {
   requestGroupAgents,
   requestDeleteGroupAgent,
   requestAddAgentToGroup,
-  requestOverviewInfo
+  requestOverviewInfo,
+  requestAllPreferences,
+  requestPreference,
+  requestUpdatePreference
 }

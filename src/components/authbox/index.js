@@ -13,7 +13,8 @@ import {
 } from './input'
 import {
   requestSignIn,
-  requestSignUp
+  requestSignUp,
+  requestPreference
 } from '../../api'
 
 const useStyles = makeStyles((theme) => ({
@@ -33,6 +34,7 @@ export default function AuthBox () {
   const [signInMessage, setSignInMessage] = React.useState()
   const [signUpStatus, setSignUpStatus] = React.useState()
   const [signUpMessage, setSignUpMessage] = React.useState()
+  const [forbidSignUp, setForbidSignUp] = React.useState(false)
 
   const signInEmailRef = React.useRef()
   const signInPasswordRef = React.useRef()
@@ -122,6 +124,18 @@ export default function AuthBox () {
     window.location.href = '/'
   }
 
+  React.useEffect(() => {
+    // 检查是否禁止注册
+    (async () => {
+      const content = await requestPreference('forbidSignUp')
+      if (content && content.value === 'true') {
+        setForbidSignUp(true)
+        setSignUpMessage('管理员已关闭注册')
+        setSignUpStatus('error')
+      }
+    })()
+  }, [])
+
   return (
     <Box className={classes.box}>
       <Tabs value={tabIndex} onChange={handleChangeTab} centered>
@@ -140,7 +154,7 @@ export default function AuthBox () {
           <UsernameInput ref={signUpUsernameRef} /><br />
           <EmailInput ref={signUpEmailRef} /><br />
           <PasswordInput ref={signUpPasswordRef} />
-          <SubmitButton msg={signUpMessage} status={signUpStatus} onClick={handleSignUp}>注 册</SubmitButton>
+          <SubmitButton msg={signUpMessage} status={signUpStatus} onClick={handleSignUp} disabled={forbidSignUp}>注 册</SubmitButton>
         </form>
       </Box>
     </Box>

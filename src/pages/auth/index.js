@@ -28,7 +28,7 @@ function App () {
     // 检查是否已经登录
     (async () => {
       const content = await requestSelfInfo()
-      if (content) { window.location.href = '/123' }
+      if (content) { window.location.href = '/' }
     })()
   }, [])
 
