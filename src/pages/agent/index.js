@@ -20,7 +20,7 @@ import {
   DialogContent,
   DialogContentText
 } from '@material-ui/core'
-import { RestoreFromTrash, Delete, Autorenew, Security, Feedback } from '@material-ui/icons'
+import { RestoreFromTrash, Delete, Autorenew, Security, Feedback, Build } from '@material-ui/icons'
 import DateFnsUtils from '@date-io/date-fns'
 import { MuiPickersUtilsProvider, DateTimePicker } from '@material-ui/pickers'
 import Navigation from '../../components/navigation'
@@ -93,7 +93,7 @@ function App () {
   const [agentInfo, setAgentInfo] = React.useState()
   const [interval, setInterval] = React.useState(3600000)
   const tempNow = Date.now()
-  const [from, setFrom] = React.useState(new Date(tempNow - 3600000))
+  const [from, setFrom] = React.useState(new Date(tempNow - interval))
   const [to, setTo] = React.useState(new Date(tempNow))
 
   const [dialogOpen, setDialogOpen] = React.useState(false)
@@ -150,6 +150,13 @@ function App () {
     setInterval(v)
     const tempNow = Date.now()
     setFrom(new Date(tempNow - v))
+    setTo(new Date(tempNow))
+  }
+
+  const handleRefreshClick = () => {
+    if (interval === 0) return
+    const tempNow = Date.now()
+    setFrom(new Date(tempNow - interval))
     setTo(new Date(tempNow))
   }
 
@@ -339,13 +346,23 @@ function App () {
                     <Button
                       variant='outlined'
                       color='primary'
-                      startIcon={<Autorenew />}
+                      startIcon={<Build />}
                       onClick={handleFixClick}
                       className={classes.actionButton}
                     >
                       已修复
                     </Button>
                   )}
+                  <Button
+                    variant='outlined'
+                    color='primary'
+                    startIcon={<Autorenew />}
+                    disabled={interval === 0}
+                    onClick={handleRefreshClick}
+                    className={classes.actionButton}
+                  >
+                    刷新
+                  </Button>
                   {agentInfo.deleted ? (
                     <Button
                       variant='outlined'
