@@ -291,10 +291,10 @@ function App () {
       const id = new URLSearchParams(window.location.search).get('id')
       if (!id) window.location.href = '/agents'
 
-      const content = await requestMountsInfo(id)
+      const content = await requestMountsInfo(id, from.getTime(), to.getTime())
       setMountsData(content)
     })()
-  }, [])
+  }, [from, to])
 
   React.useEffect(() => {
     (async () => {

@@ -88,8 +88,8 @@ const requestDiskInfo = async (id, from, to) => {
   return content
 }
 
-const requestMountsInfo = async (id) => {
-  const content = await fetchGetJSON(`/api/data/${id}/mountsinfo?from=0&to=0`)
+const requestMountsInfo = async (id, from, to) => {
+  const content = await fetchGetJSON(`/api/data/${id}/mountsinfo?from=${from}&to=${to}`)
   return content
 }
 
